@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoWork | Espace de Travail Premium</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/phosphor-icons"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Manrope"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#1a1a1a',
+                            blue: '#2563EB',
+                            gray: '#f5f5f7',
+                            orange: '#f97316', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #ffffff; color: #1a1a1a; }
+        
+        .btn-primary {
+            background-color: #000;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2563EB; /* Retour au Bleu au survol */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .hover-zoom { overflow: hidden; }
+        .hover-zoom img { transition: transform 0.7s ease; }
+        .hover-zoom:hover img { transform: scale(1.05); }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+        }
+
+        /* Animations de transition de page (pour les détails) */
+        .page-transition {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Style Accordéon FAQ */
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary ~ * { animation: sweep .5s ease-in-out; }
+        @keyframes sweep { 0%    {opacity: 0; transform: translateY(-10px)} 100%  {opacity: 1; transform: translateY(0)} }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 top-0 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 h-20 flex justify-between items-center">
+            <!-- Logo (Orange conservé ici) -->
+            <a href="#home" onclick="showMainPage()" class="flex items-center gap-3 group cursor-pointer">
+                <img src="logo.jpeg" onerror="this.src='https://placehold.co/40x40/000/FFF?text=C'" class="h-12 w-auto object-contain group-hover:rotate-12 transition">
+                <span class="font-bold text-xl tracking-tight">Co<span class="text-brand-orange">Work</span>.</span>
+            </a>
+
+            <!-- Menu Desktop (Retour au Bleu au survol) -->
+            <div class="hidden lg:flex items-center space-x-6 text-sm font-bold tracking-wide">
+                <a href="#about" onclick="showMainPage()" class="hover:text-brand-blue transition">L'ESPRIT</a>
+                <a href="#espaces" onclick="showMainPage()" class="hover:text-brand-blue transition">ESPACES</a>
+                <a href="#community" onclick="showMainPage()" class="hover:text-brand-blue transition">COMMUNAUTÉ</a>
+                <a href="#gallery" onclick="showMainPage()" class="hover:text-brand-blue transition">GALERIE</a>
+                <a href="#faq" onclick="showMainPage()" class="hover:text-brand-blue transition">FAQ</a>
+                <a href="#contact" onclick="showMainPage()" class="btn-primary px-6 py-3 rounded-full text-xs uppercase tracking-widest font-bold">Contact</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden text-2xl"><i class="ph ph-list"></i></button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 p-4 absolute w-full shadow-xl">
+            <div class="flex flex-col space-y-4 font-bold">
+                <a href="#about" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">À Propos</a>
+                <a href="#espaces" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Nos Espaces</a>
+                <a href="#community" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Communauté</a>
+                <a href="#gallery" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Galerie</a>
+                <a href="#contact" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 text-brand-blue">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTAINER PRINCIPAL -->
+    <main id="main-content" class="flex-grow pt-20">
+        
+        <!-- ================= PAGE PRINCIPALE (ONE PAGE) ================= -->
+        <div id="home-page" class="page-transition">
+            
+            <!-- 1. HERO SECTION -->
+            <section id="home" class="relative pt-12 pb-20 md:pt-24 md:pb-32 bg-grid min-h-[85vh] flex items-center">
+                <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2">
+                        <div class="inline-flex items-center gap-2 border border-black/10 px-4 py-1.5 rounded-full bg-white mb-8 shadow-sm">
+                            <span class="w-2 h-2 bg-brand-blue rounded-full animate-pulse"></span>
+                            <span class="text-xs font-bold uppercase tracking-wide text-gray-500">Ouagadougou • Projet ZACA</span>
+                        </div>
+                        
+                        <h1 class="text-5xl md:text-7xl font-extrabold leading-[1] tracking-tight mb-8 text-black">
+                            L'ESPACE OÙ <br>
+                            LES IDÉES <span class="text-brand-blue">DÉCOLLENT.</span>
+                        </h1>
+                        
+                        <p class="text-xl text-gray-500 max-w-xl mb-12 font-medium">
+                            Un environnement de travail conçu pour la performance. Rejoignez l'élite à ZACA.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="contactWhatsApp('Je veux visiter')" class="btn-primary px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                                Planifier une visite <i class="ph-bold ph-arrow-right"></i>
+                            </button>
+                            <a href="#espaces" class="px-8 py-4 rounded-full border border-gray-200 hover:border-black hover:text-brand-blue transition text-sm font-bold uppercase tracking-widest flex items-center justify-center bg-white">
+                                Voir les tarifs
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Image Affiche Hero -->
+                    <div class="md:w-1/2 relative h-[500px] w-full rounded-[3rem] overflow-hidden shadow-2xl group border-8 border-white">
+                         <img src="accueil.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80'" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. À PROPOS (L'ESPRIT) -->
+            <section id="about" class="py-24 bg-white">
+                <div class="container mx-auto px-6">
+                    <div class="flex flex-col md:flex-row gap-16 items-center">
+                        <div class="md:w-1/2 relative">
+                            <!-- Image À Propos -->
+                            <img src="accueil.jpeg" class="rounded-[3rem] shadow-2xl w-full object-cover h-[500px]">
+                            <div class="absolute -bottom-8 -right-8 bg-brand-black text-white p-8 rounded-[2rem] shadow-xl hidden md:block">
+                                <div class="text-4xl font-black text-brand-blue">100%</div>
+                                <div class="text-sm font-bold uppercase">Productivité</div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <div class="inline-block px-3 py-1 bg-brand-gray text-brand-blue text-xs font-bold uppercase rounded-full mb-6">Notre Vision</div>
+                            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">PLUS QU'UN BUREAU,<br>UNE <span class="text-brand-blue">AMBITION</span>.</h2>
+                            <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                                Situé au cœur du projet ZACA, CoWork est né d'une conviction : l'environnement détermine la réussite. Nous avons créé un espace aux standards internationaux pour en finir avec les coupures et l'isolement.
+                            </p>
+                            <div class="grid grid-cols-2 gap-6 mt-8">
+                                <div class="flex items-start gap-3">
+                                    <i class="ph-fill ph-lightning text-brand-blue text-2xl"></i>
+                                    <div><h4 class="font-bold">Zéro Coupure</h4><p class="text-sm text-gray-500">Générateur & Fibre de secours.</p></div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i class="ph-fill ph-users-three text-brand-blue text-2xl"></i>
+                                    <div><h4 class="font-bold">Réseau</h4><p class="text-sm text-gray-500">Connectez-vous à l'élite.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. NOS ESPACES (WIDGETS) -->
+            <section id="espaces" class="py-24 bg-brand-gray">
+                <div class="container mx-auto px-6">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">NOS ESPACES</h2>
+                        <p class="text-gray-500">Des formules flexibles adaptées à votre croissance. Tout inclus, sans surprise.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        
+                        <!-- WIDGET 1 : OPEN SPACE -->
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="espace open space.jpeg" onerror="this.src='https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold uppercase">Flex</div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold mb-2">L'Open Space</h3>
+                                <p class="text-gray-500 text-sm mb-4 flex-grow">Espace partagé dynamique pour freelances et créatifs.</p>
+                                <div class="border-t border-gray-100 pt-4 mt-auto">
+                                    <!-- Retour au bleu pour le prix -->
+                                    <div class="text-2xl font-bold text-brand-blue mb-3">3 000 F <span class="text-xs text-gray-400 font-normal text-black">/jour</span></div>
+                                    <button onclick="showDetail('detail-openspace')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">
+                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WIDGET 2 : ESPACE PRO -->
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group border-2 border-brand-blue/10">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="bureau professionnel 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <!-- Badge "Populaire" reste Orange pour contraster subtilement -->
+                                <div class="absolute top-4 right-4 bg-brand-orange text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Populaire</div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold mb-2">Espace Pro</h3>
+                                <p class="text-gray-500 text-sm mb-4 flex-grow">Bureau dédié en espace calme avec services premium.</p>
+                                <div class="border-t border-gray-100 pt-4 mt-auto">
+                                    <div class="text-2xl font-bold text-brand-blue mb-3">5 000 F <span class="text-xs text-gray-400 font-normal text-black">/jour</span></div>
+                                    <button onclick="showDetail('detail-espacepro')" class="w-full py-2 rounded-xl bg-black text-white hover:bg-brand-blue transition text-sm font-bold flex items-center justify-center gap-2">
+                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WIDGET 3 : BUREAU PRIVÉ -->
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="bureau prive.jpeg" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c54be3852f33?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute top-4 right-4 bg-black text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Privé</div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold mb-2">Bureau Privé</h3>
+                                <p class="text-gray-500 text-sm mb-4 flex-grow">Votre propre bureau fermé. Confidentialité totale.</p>
+                                <div class="border-t border-gray-100 pt-4 mt-auto">
+                                    <div class="text-2xl font-bold text-brand-blue mb-3">10 000 F <span class="text-xs text-gray-400 font-normal text-black">/jour</span></div>
+                                    <button onclick="showDetail('detail-private')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">
+                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WIDGET 4 : SALLE RÉUNION -->
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="salle de reunion 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold uppercase">Meeting</div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold mb-2">Salle de Réunion</h3>
+                                <p class="text-gray-500 text-sm mb-4 flex-grow">Équipée pour vos présentations et formations.</p>
+                                <div class="border-t border-gray-100 pt-4 mt-auto">
+                                    <div class="text-2xl font-bold text-brand-blue mb-3">15 000 F <span class="text-xs text-gray-400 font-normal text-black">/heure</span></div>
+                                    <button onclick="showDetail('detail-meeting')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">
+                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. COMMUNAUTÉ & ÉVÉNEMENTS -->
+            <section id="community" class="py-24 bg-black text-white relative overflow-hidden">
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                        <div>
+                            <div class="inline-block px-3 py-1 bg-brand-blue text-white text-xs font-bold uppercase rounded-full mb-6">Lifestyle</div>
+                            <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">NE TRAVAILLEZ PLUS <br> <span class="text-brand-blue">SEUL.</span></h2>
+                        </div>
+                        <p class="text-gray-400 max-w-md text-lg">Rejoignez une communauté vibrante. Formations, afterworks et petits-déjeuners pour booster votre réseau.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="bg-white/10 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10 hover:bg-white/20 transition">
+                            <div class="text-brand-blue font-bold text-sm uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-coffee"></i> Hebdo</div>
+                            <h3 class="text-2xl font-bold mb-4">Petit-Déj Entrepreneurs</h3>
+                            <p class="text-gray-400 text-sm">Chaque lundi matin, commencez la semaine en partageant vos objectifs autour d'un café offert.</p>
+                        </div>
+                        <div class="bg-white/10 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10 hover:bg-white/20 transition">
+                            <div class="text-purple-400 font-bold text-sm uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-student"></i> Mensuel</div>
+                            <h3 class="text-2xl font-bold mb-4">Atelier Digital</h3>
+                            <p class="text-gray-400 text-sm">Des experts partagent leurs connaissances : Marketing, Finance, Tech. Gratuit pour les membres.</p>
+                        </div>
+                        <div class="bg-white/10 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10 hover:bg-white/20 transition">
+                            <!-- Orange subtil pour les événements festifs -->
+                            <div class="text-brand-orange font-bold text-sm uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-confetti"></i> Vendredi</div>
+                            <h3 class="text-2xl font-bold mb-4">Afterwork ZACA</h3>
+                            <p class="text-gray-400 text-sm">Détendez-vous après le travail. Rencontrez les autres occupants de l'immeuble.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. GALERIE PHOTOS -->
+            <section id="gallery" class="py-24 bg-white">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-12 tracking-tight text-center">IMMERSION <span class="text-brand-blue">TOTALE</span></h2>
+                    
+                    <!-- Grille Masonry -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Colonne 1 -->
+                        <div class="flex flex-col gap-6">
+                            <img src="p1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p2.jpeg" onerror="this.src='https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p7.jpeg" onerror="this.src='https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p10.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=800'" class="w-full h-64 object-cover rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                        </div>
+                        <!-- Colonne 2 -->
+                        <div class="flex flex-col gap-6">
+                            <img src="p3.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p4.jpeg" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c54be3852f33?q=80&w=800'" class="w-full h-80 object-cover rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p8.jpeg" onerror="this.src='https://images.unsplash.com/photo-1600508774634-4e11d34730e2?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                        </div>
+                        <!-- Colonne 3 -->
+                        <div class="flex flex-col gap-6">
+                            <img src="p5.jpeg" onerror="this.src='https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p6.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                            <img src="p9.jpeg" onerror="this.src='https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. BLOG / ACTUALITÉS -->
+            <section id="blog" class="py-24 bg-brand-gray">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-12 tracking-tight text-center">LE JOURNAL <span class="text-brand-blue">YC</span>.</h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition group cursor-pointer">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="p-8">
+                                <div class="text-xs font-bold text-brand-blue uppercase mb-2">Conseil</div>
+                                <h3 class="text-xl font-bold mb-3">5 Astuces pour mieux travailler en Open Space</h3>
+                                <p class="text-gray-500 text-sm mb-4">Comment rester concentré tout en profitant de l'énergie collective ?</p>
+                                <span class="text-sm font-bold underline">Lire l'article</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition group cursor-pointer">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="p-8">
+                                <div class="text-xs font-bold text-brand-blue uppercase mb-2">Event</div>
+                                <h3 class="text-xl font-bold mb-3">Retour sur l'Afterwork de Janvier</h3>
+                                <p class="text-gray-500 text-sm mb-4">Plus de 50 entrepreneurs réunis pour échanger. Découvrez les photos.</p>
+                                <span class="text-sm font-bold underline">Lire l'article</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition group cursor-pointer">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="p-8">
+                                <div class="text-xs font-bold text-brand-blue uppercase mb-2">Story</div>
+                                <h3 class="text-xl font-bold mb-3">Interview : Sarah, Architecte Freelance</h3>
+                                <p class="text-gray-500 text-sm mb-4">Pourquoi a-t-elle quitté son bureau à domicile pour CoWork ?</p>
+                                <span class="text-sm font-bold underline">Lire l'article</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. FAQ -->
+            <section id="faq" class="py-24 bg-white">
+                <div class="container mx-auto px-6 max-w-3xl">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-12 tracking-tight text-center">QUESTIONS FRÉQUENTES</h2>
+                    <div class="space-y-4">
+                        <details class="group bg-brand-gray p-6 rounded-2xl cursor-pointer">
+                            <summary class="flex justify-between items-center font-bold text-xl list-none">
+                                Quels sont les horaires d'ouverture ?
+                                <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span>
+                            </summary>
+                            <div class="text-gray-600 mt-4 leading-relaxed">
+                                Pour les membres "Nomade" (3000F), l'accès est de 8h à 18h du lundi au samedi. Pour les membres "Espace Pro" et "Bureau Privé", l'accès est possible 24h/24 et 7j/7.
+                            </div>
+                        </details>
+                        <details class="group bg-brand-gray p-6 rounded-2xl cursor-pointer">
+                            <summary class="flex justify-between items-center font-bold text-xl list-none">
+                                L'internet est-il vraiment rapide ?
+                                <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span>
+                            </summary>
+                            <div class="text-gray-600 mt-4 leading-relaxed">
+                                Oui. Nous disposons d'une ligne Fibre Optique dédiée professionnelle avec un débit garanti et un backup 4G.
+                            </div>
+                        </details>
+                        <details class="group bg-brand-gray p-6 rounded-2xl cursor-pointer">
+                            <summary class="flex justify-between items-center font-bold text-xl list-none">
+                                Puis-je recevoir des clients ?
+                                <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span>
+                            </summary>
+                            <div class="text-gray-600 mt-4 leading-relaxed">
+                                Absolument. Vous pouvez recevoir vos visiteurs dans l'espace d'attente ou louer la salle de réunion pour plus de confidentialité.
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. CONTACT & ACCÈS -->
+            <section id="contact" class="py-24 bg-brand-black text-white relative overflow-hidden">
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="text-center max-w-4xl mx-auto mb-16">
+                        <h2 class="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight">CONTACTEZ <span class="text-brand-blue">NOUS</span>.</h2>
+                        <p class="text-xl text-gray-400">Une question ? Envie de visiter ? Nous sommes là pour vous.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-12 items-start">
+                        <!-- Info Box -->
+                        <div class="bg-white text-black p-10 rounded-3xl shadow-xl">
+                            <h3 class="text-2xl font-bold mb-8">Nos Coordonnées</h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-brand-blue text-xl shrink-0"><i class="ph-fill ph-map-pin"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-lg">Adresse</h4>
+                                        <p class="text-gray-600">Projet ZACA, Centre Ville<br>Ouagadougou, Burkina Faso</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-brand-blue text-xl shrink-0"><i class="ph-fill ph-phone"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-lg">Téléphone</h4>
+                                        <!-- Nouveau Numéro -->
+                                        <p class="text-gray-600">+226 54 33 75 26</p>
+                                        <p class="text-sm text-gray-400">Lun-Sam : 08h - 18h</p>
+                                    </div>
+                                </div>
+                                <button onclick="contactWhatsApp('Bonjour, je souhaite venir visiter')" class="mt-4 w-full py-4 rounded-xl bg-brand-blue text-white font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                                    <i class="ph-fill ph-whatsapp-logo text-xl"></i> Écrire sur WhatsApp
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Map Link (Photo personnalisée) -->
+                        <a href="https://maps.app.goo.gl/FgTdA7AX1q82KtzWA?g_st=ic" target="_blank" class="block bg-gray-800 rounded-3xl h-[400px] relative overflow-hidden group cursor-pointer border border-white/10 hover:border-brand-blue/50 transition duration-300">
+                            <!-- Image MAPS.JPEG locale -->
+                            <img src="maps.jpeg" onerror="this.src='https://images.unsplash.com/photo-1577083552792-a0d461cb1dd6?q=80&w=1000&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="bg-white text-black px-6 py-3 rounded-full shadow-xl font-bold flex items-center gap-2 group-hover:scale-110 transition duration-300">
+                                    <span class="w-3 h-3 bg-brand-blue rounded-full animate-pulse"></span>
+                                    Voir sur la carte
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= DÉTAILS MASQUÉS (ACCESSIBLES VIA BOUTONS) ================= -->
+        
+        <!-- DETAIL OPEN SPACE -->
+        <div id="detail-openspace" class="hidden page-transition min-h-screen bg-white pb-20">
+            <div class="h-[50vh] relative">
+                <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance ici) -->
+                <img src="espace open space.jpeg" onerror="this.src='https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour</button>
+                        <h1 class="text-4xl md:text-6xl font-extrabold mb-4">ESPACE COLLABORATIF & CAFÉ</h1>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container mx-auto px-6 py-12">
+                <!-- Intro -->
+                <div class="max-w-3xl mx-auto text-center mb-16">
+                    <h2 class="text-3xl font-bold mb-6">Boostez votre productivité</h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        Découvrez nos tarifs attractifs pour un espace de travail collaboratif et café à CoWork. Seul ou en groupe, boostez votre productivité avec nos offres flexibles et notre connexion haut débit. Profitez des offres spéciales pour les étudiants CoWorkers.
+                    </p>
+                    <div class="inline-block bg-brand-blue/10 text-brand-blue px-6 py-3 rounded-full font-bold text-sm border border-brand-blue/20">
+                        🎓 Une réduction exclusive est prévue pour les étudiants.
+                    </div>
+                </div>
+
+                <!-- Pricing Cards -->
+                <div class="grid md:grid-cols-3 gap-8 mb-20">
+                    <!-- Day Pass -->
+                    <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
+                        <h3 class="text-xl font-bold mb-2">Open Space Jour</h3>
+                        <p class="text-gray-500 text-sm mb-6">Pour les besoins ponctuels.</p>
+                        <div class="text-4xl font-extrabold mb-6">3 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès Espace Collaboratif & Café</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès 24h</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Café ou Thé inclus</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Imprimante disponible</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un Open Space Jour')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Weekly Pass -->
+                    <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
+                        <h3 class="text-xl font-bold mb-2">Hebdomadaire</h3>
+                        <p class="text-gray-500 text-sm mb-6">Accès continu 7 jours.</p>
+                        <div class="text-4xl font-extrabold mb-6">15 000 F <span class="text-base font-normal text-gray-400">/semaine</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Tous les avantages Jour</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès 7j/7</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Impression incluse</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès outils de productivité</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un Open Space Hebdo')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Monthly Pro -->
+                    <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
+                        <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
+                        <h3 class="text-xl font-bold mb-2">CoWorker Pro</h3>
+                        <p class="text-gray-500 text-sm mb-6">L'expérience illimitée & Premium.</p>
+                        <div class="text-4xl font-extrabold mb-6">55 000 F <span class="text-base font-normal text-gray-400">/mois</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Espaces, Open Space & Café</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Salle de Réunion</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Assistante & Salle d'attente</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Casier Personnel & Support Premium</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Événements & Formations</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Communauté CoWorkers</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un abonnement CoWorker Pro')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
+                    </div>
+                </div>
+
+                <!-- Affiche Image at Bottom -->
+                <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
+                    <!-- IMAGE : AFFICHE OPEN SPACE (Mise en bas comme demandé) -->
+                    <img src="affiche open space.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Open Space">
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAIL ESPACE PRO -->
+        <div id="detail-espacepro" class="hidden page-transition min-h-screen bg-white pb-20">
+            <div class="h-[50vh] relative">
+                 <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance pour éviter le doublon) -->
+                <img src="bureau professionnel 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour</button>
+                        <h1 class="text-4xl md:text-6xl font-extrabold mb-4">SOLUTIONS PROFESSIONNELLES</h1>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container mx-auto px-6 py-12">
+                <!-- Intro -->
+                <div class="max-w-3xl mx-auto text-center mb-16">
+                    <h2 class="text-3xl font-bold mb-6">Bureaux privés dans un espace professionnel</h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        Optez pour des bureaux privés dans un cadre professionnel moderne, au cœur de Ouagadougou, pour booster votre productivité.
+                    </p>
+                </div>
+
+                <!-- Pricing Cards -->
+                <div class="grid md:grid-cols-3 gap-8 mb-20">
+                    <!-- Pro Worker (Jour) -->
+                    <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
+                        <h3 class="text-xl font-bold mb-2">Pro Worker</h3>
+                        <p class="text-gray-500 text-sm mb-6">Pour débuter avec l'essentiel.</p>
+                        <div class="text-4xl font-extrabold mb-6">5 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès bureau privé & rangement</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès 24h</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Café ou Thé inclus</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Imprimante disponible</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un bureau Pro Worker Jour')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Pro Worker Avancé (Mois) -->
+                    <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
+                        <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
+                        <h3 class="text-xl font-bold mb-2">Pro Worker Avancé</h3>
+                        <p class="text-gray-500 text-sm mb-6">L'expérience optimale & complète.</p>
+                        <div class="text-4xl font-extrabold mb-6">75 000 F <span class="text-base font-normal text-gray-400">/mois</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès bureau privé & rangement</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès 24/7 & Wi-Fi Haut Débit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Salle de Réunion</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Assistante & Salle d'attente</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Impression & Photocopie gratuite</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Service Courrier & Zone Détente</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Communauté & Événements</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un abonnement Pro Worker Avancé')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Equipe Startup (Sur Mesure) -->
+                    <div class="border border-black bg-black text-white rounded-3xl p-8 hover:shadow-xl transition flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-white">Equipe Startup</h3>
+                        <p class="text-gray-400 text-sm mb-6">Espace aménagé spécialement pour vous.</p>
+                        <div class="text-4xl font-extrabold mb-6">Sur Mesure <span class="text-base font-normal text-gray-400">/mois</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow text-gray-300">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Avantages Pro Worker Avancé inclus</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Espace collaboratif sur mesure</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accès VIP événements CO WORK</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accès privilégié salle de réunion</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Consultation experts métiers</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Mise en lumière de vos produits</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je souhaite un devis pour Equipe Startup')" class="w-full py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-bold">Demander un Devis</button>
+                    </div>
+                </div>
+
+                <!-- Affiche Image at Bottom -->
+                <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
+                    <!-- IMAGE : AFFICHE BUREAU PROFESSIONNEL (Mise en bas) -->
+                    <img src="affiche bureau professionnel.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Espace Pro">
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAIL BUREAU PRIVE -->
+        <div id="detail-private" class="hidden page-transition min-h-screen bg-white pb-20">
+            <div class="h-[50vh] relative">
+                 <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance pour éviter le doublon) -->
+                <img src="bureau prive.jpeg" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c54be3852f33?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour</button>
+                        <h1 class="text-4xl md:text-6xl font-extrabold mb-4">ESPACE ENTREPRENEURS</h1>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container mx-auto px-6 py-12">
+                <!-- Intro -->
+                <div class="max-w-3xl mx-auto text-center mb-16">
+                    <h2 class="text-3xl font-bold mb-6">Bureau Privatif Individuel</h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        Transformez vos idées en réalité à Ouagadougou avec nos bureaux privatifs, mêlant innovation et tranquillité professionnelles.
+                    </p>
+                </div>
+
+                <!-- Pricing Cards -->
+                <div class="grid md:grid-cols-3 gap-8 mb-20">
+                    <!-- Business Man (Jour) -->
+                    <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
+                        <h3 class="text-xl font-bold mb-2">Business Man</h3>
+                        <p class="text-gray-500 text-sm mb-6">Bureau privé et personnalisable pour une journée.</p>
+                        <div class="text-4xl font-extrabold mb-6">10 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Bureau privé personnalisé + visiteurs</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Ambiance calme & Confidentialité</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Wi-Fi Haut Débit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Boissons chaudes incluses</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Armoire & Rangements</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Imprimante disponible</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un bureau Business Man Jour')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Entrepreneur Pro (Mois) -->
+                    <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
+                        <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
+                        <h3 class="text-xl font-bold mb-2">Entrepreneur Pro</h3>
+                        <p class="text-gray-500 text-sm mb-6">Solution complète pour entrepreneurs.</p>
+                        <div class="text-4xl font-extrabold mb-6">150 000 F <span class="text-base font-normal text-gray-400">/mois</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Bureau privé personnalisé + visiteurs</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès 24/7 & Wi-Fi Haut Débit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Café/Thé à volonté & Zone détente</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Salle de réunion & Impression gratuite</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Assistante & Salle d'attente</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Casier sécurisé & Service courrier</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Consultation experts & Réseautage</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un abonnement Entrepreneur Pro')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Pack PME (Sur Mesure) -->
+                    <div class="border border-black bg-black text-white rounded-3xl p-8 hover:shadow-xl transition flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-white">Pack PME</h3>
+                        <p class="text-gray-400 text-sm mb-6">Services exclusifs supplémentaires pour équipe.</p>
+                        <div class="text-4xl font-extrabold mb-6">A la demande <span class="text-base font-normal text-gray-400">/mois</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow text-gray-300">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Tous les avantages Entrepreneur Pro +</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Secrétariat dédié</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accès privilégié salle de réunion</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Solutions sur mesure pour équipe</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je souhaite un devis pour Pack PME')" class="w-full py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-bold">Demander un Devis</button>
+                    </div>
+                </div>
+
+                <!-- Affiche Image at Bottom -->
+                <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
+                    <!-- IMAGE : AFFICHE BUREAU PRIVE (Mise en bas) -->
+                    <img src="affiche bureau prive.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Bureau Privé">
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAIL MEETING -->
+        <div id="detail-meeting" class="hidden page-transition min-h-screen bg-white pb-20">
+            <div class="h-[50vh] relative">
+                <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance pour éviter le doublon) -->
+                <img src="salle de reunion 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/30"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour</button>
+                        <h1 class="text-4xl md:text-6xl font-extrabold mb-4">SALLE DE RÉUNION / FORMATION</h1>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container mx-auto px-6 py-12">
+                <!-- Intro -->
+                <div class="max-w-3xl mx-auto text-center mb-16">
+                    <h2 class="text-3xl font-bold mb-6">Salle de Réunion / Salle de Formation</h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        CoWork met à votre disposition une salle de réunion et une salle de formation hautement équipée à la pointe de la technologie.
+                    </p>
+                </div>
+
+                <!-- Pricing Cards -->
+                <div class="grid md:grid-cols-3 gap-8 mb-20">
+                    <!-- Pass Meeting (Heure) -->
+                    <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
+                        <h3 class="text-xl font-bold mb-2">Pass Meeting</h3>
+                        <p class="text-gray-500 text-sm mb-6">Pour une rencontre ponctuelle.</p>
+                        <div class="text-4xl font-extrabold mb-6">5 000 F <span class="text-base font-normal text-gray-400">/heure</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès Salle de réunion (Forfait adaptable)</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Salle équipée et meublée</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un Pass Meeting')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Pass Workshop (Jour) -->
+                    <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
+                        <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
+                        <h3 class="text-xl font-bold mb-2">Pass Workshop</h3>
+                        <p class="text-gray-500 text-sm mb-6">Privatisation pour ateliers ou formations.</p>
+                        <div class="text-4xl font-extrabold mb-6">25 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Privatisation Salle de réunion</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Salle équipée et meublée</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Service Imprimante</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Boissons chaudes offertes</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Casier Personnel</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je réserve un Pass Workshop')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
+                    </div>
+
+                    <!-- Pass Training (Sur Mesure) -->
+                    <div class="border border-black bg-black text-white rounded-3xl p-8 hover:shadow-xl transition flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-white">Pass Training</h3>
+                        <p class="text-gray-400 text-sm mb-6">Formation de plusieurs jours (2+ jours).</p>
+                        <div class="text-4xl font-extrabold mb-6">A la demande <span class="text-base font-normal text-gray-400">/projet</span></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-grow text-gray-300">
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accès Salle de formation équipée</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accompagnement projet formation</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accès 24/7 & Wi-Fi Haut Débit</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Service Imprimante</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Boissons Chaudes Offertes</li>
+                        </ul>
+                        <button onclick="contactWhatsApp('Je souhaite un devis pour Pass Training')" class="w-full py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-bold">Demander un Devis</button>
+                    </div>
+                </div>
+
+                <!-- Affiche Image at Bottom -->
+                <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
+                    <!-- IMAGE : AFFICHE SALLE REUNION (Mise en bas) -->
+                    <img src="affiche salle de reunion.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Salle de Réunion">
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-100 py-12 mt-auto">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="font-bold text-xl">
+                Co<span class="text-brand-orange">Work</span>.
+            </div>
+            <div class="text-gray-500 text-sm">
+                &copy; 2026 CoWork. Tous droits réservés.
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="text-gray-400 hover:text-black transition"><i class="ph-bold ph-instagram-logo text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-black transition"><i class="ph-bold ph-facebook-logo text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fonction pour afficher la page principale
+        function showMainPage() {
+            document.getElementById('home-page').classList.remove('hidden');
+            // Cacher toutes les pages de détails
+            const details = document.querySelectorAll('[id^="detail-"]');
+            details.forEach(d => d.classList.add('hidden'));
+            
+            // Re-afficher le footer normal
+            document.querySelector('footer').classList.remove('hidden');
+        }
+
+        // Fonction pour afficher les détails d'un espace (mode focus)
+        function showDetail(detailId) {
+            document.getElementById('home-page').classList.add('hidden');
+            
+            // Cacher toutes les pages de détails d'abord
+            const details = document.querySelectorAll('[id^="detail-"]');
+            details.forEach(d => d.classList.add('hidden'));
+            
+            // Afficher le détail demandé
+            const target = document.getElementById(detailId);
+            if(target) {
+                target.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function contactWhatsApp(message) {
+            // NUMÉRO MIS À JOUR
+            const phoneNumber = "22654337526"; 
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

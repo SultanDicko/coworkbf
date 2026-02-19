@@ -4,31 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoWork | Espace de Travail Premium</title>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
     <script src="https://unpkg.com/phosphor-icons"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['"Manrope"', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['"Manrope"', 'sans-serif'] },
                     colors: {
                         brand: {
                             black: '#1a1a1a',
                             blue: '#2563EB',
                             gray: '#f5f5f7',
-                            orange: '#f97316', 
+                            orange: '#f97316',
                         }
                     }
                 }
@@ -38,87 +30,71 @@
 
     <style>
         body { background-color: #ffffff; color: #1a1a1a; }
-        
-        .btn-primary {
-            background-color: #000;
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #2563EB; /* Retour au Bleu au survol */
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
-        }
-
+        .btn-primary { background-color: #000; color: #fff; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #2563EB; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37,99,235,0.2); }
         .hover-zoom { overflow: hidden; }
         .hover-zoom img { transition: transform 0.7s ease; }
         .hover-zoom:hover img { transform: scale(1.05); }
-
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
-        }
-
-        /* Animations de transition de page (pour les détails) */
-        .page-transition {
-            animation: fadeIn 0.5s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Style Accordéon FAQ */
+        .bg-grid { background-size: 40px 40px; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px); }
+        .page-transition { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
         details[open] summary ~ * { animation: sweep .5s ease-in-out; }
-        @keyframes sweep { 0%    {opacity: 0; transform: translateY(-10px)} 100%  {opacity: 1; transform: translateY(0)} }
+        @keyframes sweep { 0% {opacity: 0; transform: translateY(-10px)} 100% {opacity: 1; transform: translateY(0)} }
+
+        /* Article styles */
+        .article-body h2 { font-size: 1.75rem; font-weight: 800; margin: 2.5rem 0 1rem; color: #1a1a1a; }
+        .article-body h3 { font-size: 1.25rem; font-weight: 700; margin: 2rem 0 0.75rem; color: #2563EB; }
+        .article-body p { margin-bottom: 1.25rem; line-height: 1.85; color: #4b5563; font-size: 1.0625rem; }
+        .article-body ul { margin: 1rem 0 1.5rem 1.5rem; list-style: disc; }
+        .article-body ul li { margin-bottom: 0.5rem; color: #4b5563; line-height: 1.75; }
+        .article-body blockquote { border-left: 4px solid #2563EB; padding: 1rem 1.5rem; margin: 2rem 0; background: #f5f5f7; border-radius: 0 1rem 1rem 0; font-style: italic; color: #374151; font-size: 1.1rem; }
+        .article-body .tip-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 1rem; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+        .article-body .tip-box strong { color: #1d4ed8; }
+        .article-progress { height: 4px; background: #2563EB; position: fixed; top: 0; left: 0; z-index: 9999; transition: width 0.1s; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
+    <div class="article-progress" id="reading-progress" style="width:0%"></div>
+
     <!-- NAVIGATION -->
     <nav class="fixed w-full z-50 top-0 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
         <div class="container mx-auto px-6 h-20 flex justify-between items-center">
-            <!-- Logo (Orange conservé ici) -->
             <a href="#home" onclick="showMainPage()" class="flex items-center gap-3 group cursor-pointer">
                 <img src="logo.jpeg" onerror="this.src='https://placehold.co/40x40/000/FFF?text=C'" class="h-12 w-auto object-contain group-hover:rotate-12 transition">
-                <span class="font-bold text-xl tracking-tight">Co<span class="text-brand-orange">Work</span>.</span>
+                <span class="font-bold text-xl tracking-tight"><span class="text-brand-orange">Co</span><span class="text-brand-blue">Work</span>.</span>
             </a>
-
-            <!-- Menu Desktop (Retour au Bleu au survol) -->
             <div class="hidden lg:flex items-center space-x-6 text-sm font-bold tracking-wide">
                 <a href="#about" onclick="showMainPage()" class="hover:text-brand-blue transition">L'ESPRIT</a>
                 <a href="#espaces" onclick="showMainPage()" class="hover:text-brand-blue transition">ESPACES</a>
                 <a href="#community" onclick="showMainPage()" class="hover:text-brand-blue transition">COMMUNAUTÉ</a>
                 <a href="#gallery" onclick="showMainPage()" class="hover:text-brand-blue transition">GALERIE</a>
+                <a href="#blog" onclick="showMainPage()" class="hover:text-brand-blue transition">BLOG</a>
                 <a href="#faq" onclick="showMainPage()" class="hover:text-brand-blue transition">FAQ</a>
                 <a href="#contact" onclick="showMainPage()" class="btn-primary px-6 py-3 rounded-full text-xs uppercase tracking-widest font-bold">Contact</a>
             </div>
-            
-            <!-- Mobile Menu Button -->
             <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden text-2xl"><i class="ph ph-list"></i></button>
         </div>
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 p-4 absolute w-full shadow-xl">
             <div class="flex flex-col space-y-4 font-bold">
                 <a href="#about" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">À Propos</a>
                 <a href="#espaces" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Nos Espaces</a>
                 <a href="#community" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Communauté</a>
                 <a href="#gallery" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Galerie</a>
+                <a href="#blog" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 hover:text-brand-blue">Blog</a>
                 <a href="#contact" onclick="showMainPage(); document.getElementById('mobile-menu').classList.add('hidden')" class="text-left py-2 text-brand-blue">Contact</a>
             </div>
         </div>
     </nav>
 
-    <!-- CONTAINER PRINCIPAL -->
     <main id="main-content" class="flex-grow pt-20">
-        
-        <!-- ================= PAGE PRINCIPALE (ONE PAGE) ================= -->
+
+        <!-- ================= PAGE PRINCIPALE ================= -->
         <div id="home-page" class="page-transition">
-            
-            <!-- 1. HERO SECTION -->
+
+            <!-- 1. HERO -->
             <section id="home" class="relative pt-12 pb-20 md:pt-24 md:pb-32 bg-grid min-h-[85vh] flex items-center">
                 <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
                     <div class="md:w-1/2">
@@ -126,38 +102,28 @@
                             <span class="w-2 h-2 bg-brand-blue rounded-full animate-pulse"></span>
                             <span class="text-xs font-bold uppercase tracking-wide text-gray-500">Ouagadougou • Projet ZACA</span>
                         </div>
-                        
                         <h1 class="text-5xl md:text-7xl font-extrabold leading-[1] tracking-tight mb-8 text-black">
-                            L'ESPACE OÙ <br>
-                            LES IDÉES <span class="text-brand-blue">DÉCOLLENT.</span>
+                            L'ESPACE OÙ <br>LES IDÉES <span class="text-brand-blue">DÉCOLLENT.</span>
                         </h1>
-                        
-                        <p class="text-xl text-gray-500 max-w-xl mb-12 font-medium">
-                            Un environnement de travail conçu pour la performance. Rejoignez l'élite à ZACA.
-                        </p>
-
+                        <p class="text-xl text-gray-500 max-w-xl mb-12 font-medium">Un environnement de travail conçu pour la performance. Rejoignez l'élite à ZACA.</p>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <button onclick="contactWhatsApp('Je veux visiter')" class="btn-primary px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest flex items-center gap-2">
                                 Planifier une visite <i class="ph-bold ph-arrow-right"></i>
                             </button>
-                            <a href="#espaces" class="px-8 py-4 rounded-full border border-gray-200 hover:border-black hover:text-brand-blue transition text-sm font-bold uppercase tracking-widest flex items-center justify-center bg-white">
-                                Voir les tarifs
-                            </a>
+                            <a href="#espaces" class="px-8 py-4 rounded-full border border-gray-200 hover:border-black hover:text-brand-blue transition text-sm font-bold uppercase tracking-widest flex items-center justify-center bg-white">Voir les tarifs</a>
                         </div>
                     </div>
-                    <!-- Image Affiche Hero -->
                     <div class="md:w-1/2 relative h-[500px] w-full rounded-[3rem] overflow-hidden shadow-2xl group border-8 border-white">
-                         <img src="accueil.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80'" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                        <img src="accueil.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80'" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
                     </div>
                 </div>
             </section>
 
-            <!-- 2. À PROPOS (L'ESPRIT) -->
+            <!-- 2. À PROPOS -->
             <section id="about" class="py-24 bg-white">
                 <div class="container mx-auto px-6">
                     <div class="flex flex-col md:flex-row gap-16 items-center">
                         <div class="md:w-1/2 relative">
-                            <!-- Image À Propos -->
                             <img src="accueil.jpeg" class="rounded-[3rem] shadow-2xl w-full object-cover h-[500px]">
                             <div class="absolute -bottom-8 -right-8 bg-brand-black text-white p-8 rounded-[2rem] shadow-xl hidden md:block">
                                 <div class="text-4xl font-black text-brand-blue">100%</div>
@@ -167,9 +133,7 @@
                         <div class="md:w-1/2">
                             <div class="inline-block px-3 py-1 bg-brand-gray text-brand-blue text-xs font-bold uppercase rounded-full mb-6">Notre Vision</div>
                             <h2 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">PLUS QU'UN BUREAU,<br>UNE <span class="text-brand-blue">AMBITION</span>.</h2>
-                            <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                                Situé au cœur du projet ZACA, CoWork est né d'une conviction : l'environnement détermine la réussite. Nous avons créé un espace aux standards internationaux pour en finir avec les coupures et l'isolement.
-                            </p>
+                            <p class="text-gray-600 text-lg mb-6 leading-relaxed">Situé au cœur du projet ZACA, CoWork est né d'une conviction : l'environnement détermine la réussite. Nous avons créé un espace aux standards internationaux pour en finir avec les coupures et l'isolement.</p>
                             <div class="grid grid-cols-2 gap-6 mt-8">
                                 <div class="flex items-start gap-3">
                                     <i class="ph-fill ph-lightning text-brand-blue text-2xl"></i>
@@ -185,17 +149,14 @@
                 </div>
             </section>
 
-            <!-- 3. NOS ESPACES (WIDGETS) -->
+            <!-- 3. NOS ESPACES -->
             <section id="espaces" class="py-24 bg-brand-gray">
                 <div class="container mx-auto px-6">
                     <div class="text-center max-w-3xl mx-auto mb-16">
                         <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">NOS ESPACES</h2>
                         <p class="text-gray-500">Des formules flexibles adaptées à votre croissance. Tout inclus, sans surprise.</p>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        
-                        <!-- WIDGET 1 : OPEN SPACE -->
                         <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group">
                             <div class="h-48 overflow-hidden relative">
                                 <img src="espace open space.jpeg" onerror="this.src='https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
@@ -205,20 +166,14 @@
                                 <h3 class="text-xl font-bold mb-2">L'Open Space</h3>
                                 <p class="text-gray-500 text-sm mb-4 flex-grow">Espace partagé dynamique pour freelances et créatifs.</p>
                                 <div class="border-t border-gray-100 pt-4 mt-auto">
-                                    <!-- Retour au bleu pour le prix -->
                                     <div class="text-2xl font-bold text-brand-blue mb-3">3 000 F <span class="text-xs text-gray-400 font-normal text-black">/jour</span></div>
-                                    <button onclick="showDetail('detail-openspace')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">
-                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
-                                    </button>
+                                    <button onclick="showDetail('detail-openspace')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">En savoir plus <i class="ph-bold ph-arrow-right"></i></button>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- WIDGET 2 : ESPACE PRO -->
                         <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group border-2 border-brand-blue/10">
                             <div class="h-48 overflow-hidden relative">
                                 <img src="bureau professionnel 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                                <!-- Badge "Populaire" reste Orange pour contraster subtilement -->
                                 <div class="absolute top-4 right-4 bg-brand-orange text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Populaire</div>
                             </div>
                             <div class="p-6 flex flex-col flex-grow">
@@ -226,14 +181,10 @@
                                 <p class="text-gray-500 text-sm mb-4 flex-grow">Bureau dédié en espace calme avec services premium.</p>
                                 <div class="border-t border-gray-100 pt-4 mt-auto">
                                     <div class="text-2xl font-bold text-brand-blue mb-3">5 000 F <span class="text-xs text-gray-400 font-normal text-black">/jour</span></div>
-                                    <button onclick="showDetail('detail-espacepro')" class="w-full py-2 rounded-xl bg-black text-white hover:bg-brand-blue transition text-sm font-bold flex items-center justify-center gap-2">
-                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
-                                    </button>
+                                    <button onclick="showDetail('detail-espacepro')" class="w-full py-2 rounded-xl bg-black text-white hover:bg-brand-blue transition text-sm font-bold flex items-center justify-center gap-2">En savoir plus <i class="ph-bold ph-arrow-right"></i></button>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- WIDGET 3 : BUREAU PRIVÉ -->
                         <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group">
                             <div class="h-48 overflow-hidden relative">
                                 <img src="bureau prive.jpeg" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c54be3852f33?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
@@ -244,14 +195,10 @@
                                 <p class="text-gray-500 text-sm mb-4 flex-grow">Votre propre bureau fermé. Confidentialité totale.</p>
                                 <div class="border-t border-gray-100 pt-4 mt-auto">
                                     <div class="text-2xl font-bold text-brand-blue mb-3">10 000 F <span class="text-xs text-gray-400 font-normal text-black">/jour</span></div>
-                                    <button onclick="showDetail('detail-private')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">
-                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
-                                    </button>
+                                    <button onclick="showDetail('detail-private')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">En savoir plus <i class="ph-bold ph-arrow-right"></i></button>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- WIDGET 4 : SALLE RÉUNION -->
                         <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group">
                             <div class="h-48 overflow-hidden relative">
                                 <img src="salle de reunion 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
@@ -262,18 +209,15 @@
                                 <p class="text-gray-500 text-sm mb-4 flex-grow">Équipée pour vos présentations et formations.</p>
                                 <div class="border-t border-gray-100 pt-4 mt-auto">
                                     <div class="text-2xl font-bold text-brand-blue mb-3">15 000 F <span class="text-xs text-gray-400 font-normal text-black">/heure</span></div>
-                                    <button onclick="showDetail('detail-meeting')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">
-                                        En savoir plus <i class="ph-bold ph-arrow-right"></i>
-                                    </button>
+                                    <button onclick="showDetail('detail-meeting')" class="w-full py-2 rounded-xl border border-black hover:bg-black hover:text-white transition text-sm font-bold flex items-center justify-center gap-2">En savoir plus <i class="ph-bold ph-arrow-right"></i></button>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
 
-            <!-- 4. COMMUNAUTÉ & ÉVÉNEMENTS -->
+            <!-- 4. COMMUNAUTÉ -->
             <section id="community" class="py-24 bg-black text-white relative overflow-hidden">
                 <div class="container mx-auto px-6 relative z-10">
                     <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -283,7 +227,6 @@
                         </div>
                         <p class="text-gray-400 max-w-md text-lg">Rejoignez une communauté vibrante. Formations, afterworks et petits-déjeuners pour booster votre réseau.</p>
                     </div>
-
                     <div class="grid md:grid-cols-3 gap-8">
                         <div class="bg-white/10 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10 hover:bg-white/20 transition">
                             <div class="text-brand-blue font-bold text-sm uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-coffee"></i> Hebdo</div>
@@ -296,7 +239,6 @@
                             <p class="text-gray-400 text-sm">Des experts partagent leurs connaissances : Marketing, Finance, Tech. Gratuit pour les membres.</p>
                         </div>
                         <div class="bg-white/10 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10 hover:bg-white/20 transition">
-                            <!-- Orange subtil pour les événements festifs -->
                             <div class="text-brand-orange font-bold text-sm uppercase mb-4 flex items-center gap-2"><i class="ph-fill ph-confetti"></i> Vendredi</div>
                             <h3 class="text-2xl font-bold mb-4">Afterwork ZACA</h3>
                             <p class="text-gray-400 text-sm">Détendez-vous après le travail. Rencontrez les autres occupants de l'immeuble.</p>
@@ -305,27 +247,22 @@
                 </div>
             </section>
 
-            <!-- 5. GALERIE PHOTOS -->
+            <!-- 5. GALERIE -->
             <section id="gallery" class="py-24 bg-white">
                 <div class="container mx-auto px-6">
                     <h2 class="text-4xl md:text-5xl font-extrabold mb-12 tracking-tight text-center">IMMERSION <span class="text-brand-blue">TOTALE</span></h2>
-                    
-                    <!-- Grille Masonry -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Colonne 1 -->
                         <div class="flex flex-col gap-6">
                             <img src="p1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                             <img src="p2.jpeg" onerror="this.src='https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                             <img src="p7.jpeg" onerror="this.src='https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                             <img src="p10.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=800'" class="w-full h-64 object-cover rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                         </div>
-                        <!-- Colonne 2 -->
                         <div class="flex flex-col gap-6">
                             <img src="p3.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                             <img src="p4.jpeg" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c54be3852f33?q=80&w=800'" class="w-full h-80 object-cover rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                             <img src="p8.jpeg" onerror="this.src='https://images.unsplash.com/photo-1600508774634-4e11d34730e2?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                         </div>
-                        <!-- Colonne 3 -->
                         <div class="flex flex-col gap-6">
                             <img src="p5.jpeg" onerror="this.src='https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
                             <img src="p6.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=800'" class="w-full rounded-2xl shadow-lg hover:shadow-2xl transition duration-500 hover:scale-[1.02] cursor-pointer">
@@ -335,45 +272,77 @@
                 </div>
             </section>
 
-            <!-- 6. BLOG / ACTUALITÉS -->
+            <!-- 6. BLOG -->
             <section id="blog" class="py-24 bg-brand-gray">
                 <div class="container mx-auto px-6">
-                    <h2 class="text-4xl md:text-5xl font-extrabold mb-12 tracking-tight text-center">LE JOURNAL <span class="text-brand-blue">YC</span>.</h2>
-                    
+                    <div class="text-center max-w-2xl mx-auto mb-4">
+                        <div class="inline-block px-3 py-1 bg-white text-brand-blue text-xs font-bold uppercase rounded-full mb-4 shadow-sm">Ressources gratuites</div>
+                        <h2 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">RESSOURCES & <span class="text-brand-blue">CONSEILS</span>.</h2>
+                        <p class="text-gray-500 mb-12">Des articles éducatifs pour booster votre carrière, votre productivité et votre développement personnel.</p>
+                    </div>
+
                     <div class="grid md:grid-cols-3 gap-8">
-                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition group cursor-pointer">
-                            <div class="h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+
+                        <!-- Article 1 : Syndrome imposteur -->
+                        <div onclick="showArticle('article-imposteur')" class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 group cursor-pointer hover:-translate-y-2">
+                            <div class="h-52 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?q=80&w=800" alt="Professionnelle africaine confiante" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                                <div class="absolute top-4 left-4 bg-brand-blue text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Dev. Personnel</div>
+                                <div class="absolute top-4 right-4 bg-white/90 text-black px-3 py-1 rounded-full text-xs font-bold">8 min de lecture</div>
                             </div>
                             <div class="p-8">
-                                <div class="text-xs font-bold text-brand-blue uppercase mb-2">Conseil</div>
-                                <h3 class="text-xl font-bold mb-3">5 Astuces pour mieux travailler en Open Space</h3>
-                                <p class="text-gray-500 text-sm mb-4">Comment rester concentré tout en profitant de l'énergie collective ?</p>
-                                <span class="text-sm font-bold underline">Lire l'article</span>
+                                <h3 class="text-xl font-bold mb-3 group-hover:text-brand-blue transition">Vaincre le syndrome de l'imposteur au travail</h3>
+                                <p class="text-gray-500 text-sm mb-5 leading-relaxed">Apprenez à reconnaître votre véritable valeur et à vous affirmer pleinement dans votre milieu professionnel. Un guide complet pour retrouver confiance en vous.</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                                        <i class="ph-fill ph-calendar"></i> Janvier 2026
+                                    </div>
+                                    <span class="text-sm font-bold text-brand-blue flex items-center gap-1 group-hover:gap-3 transition-all">Lire l'article <i class="ph-bold ph-arrow-right"></i></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition group cursor-pointer">
-                            <div class="h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+
+                        <!-- Article 2 : Méthode Pomodoro -->
+                        <div onclick="showArticle('article-pomodoro')" class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 group cursor-pointer hover:-translate-y-2 border-2 border-brand-orange/10">
+                            <div class="h-52 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=800" alt="Homme africain concentré sur son travail" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                                <div class="absolute top-4 left-4 bg-brand-orange text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Tuto Productivité</div>
+                                <div class="absolute top-4 right-4 bg-white/90 text-black px-3 py-1 rounded-full text-xs font-bold">10 min de lecture</div>
                             </div>
                             <div class="p-8">
-                                <div class="text-xs font-bold text-brand-blue uppercase mb-2">Event</div>
-                                <h3 class="text-xl font-bold mb-3">Retour sur l'Afterwork de Janvier</h3>
-                                <p class="text-gray-500 text-sm mb-4">Plus de 50 entrepreneurs réunis pour échanger. Découvrez les photos.</p>
-                                <span class="text-sm font-bold underline">Lire l'article</span>
+                                <h3 class="text-xl font-bold mb-3 group-hover:text-brand-orange transition">Maîtriser la méthode Pomodoro pour rester focus</h3>
+                                <p class="text-gray-500 text-sm mb-5 leading-relaxed">Un guide pratique étape par étape pour structurer vos journées de travail et multiplier votre productivité grâce à cette technique éprouvée.</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                                        <i class="ph-fill ph-calendar"></i> Janvier 2026
+                                    </div>
+                                    <span class="text-sm font-bold text-brand-orange flex items-center gap-1 group-hover:gap-3 transition-all">Lire l'article <i class="ph-bold ph-arrow-right"></i></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition group cursor-pointer">
-                            <div class="h-48 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+
+                        <!-- Article 3 : Networking -->
+                        <div onclick="showArticle('article-networking')" class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 group cursor-pointer hover:-translate-y-2">
+                            <div class="h-52 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800" alt="Équipe échangeant lors d'un événement" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                                <div class="absolute top-4 left-4 bg-brand-black text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Carrière</div>
+                                <div class="absolute top-4 right-4 bg-white/90 text-black px-3 py-1 rounded-full text-xs font-bold">12 min de lecture</div>
                             </div>
                             <div class="p-8">
-                                <div class="text-xs font-bold text-brand-blue uppercase mb-2">Story</div>
-                                <h3 class="text-xl font-bold mb-3">Interview : Sarah, Architecte Freelance</h3>
-                                <p class="text-gray-500 text-sm mb-4">Pourquoi a-t-elle quitté son bureau à domicile pour CoWork ?</p>
-                                <span class="text-sm font-bold underline">Lire l'article</span>
+                                <h3 class="text-xl font-bold mb-3 group-hover:text-brand-blue transition">L'art du Networking : créer des relations durables</h3>
+                                <p class="text-gray-500 text-sm mb-5 leading-relaxed">Découvrez comment aborder les événements professionnels et transformer de simples rencontres en opportunités concrètes pour votre carrière.</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                                        <i class="ph-fill ph-calendar"></i> Février 2026
+                                    </div>
+                                    <span class="text-sm font-bold text-brand-blue flex items-center gap-1 group-hover:gap-3 transition-all">Lire l'article <i class="ph-bold ph-arrow-right"></i></span>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </section>
@@ -384,74 +353,50 @@
                     <h2 class="text-4xl md:text-5xl font-extrabold mb-12 tracking-tight text-center">QUESTIONS FRÉQUENTES</h2>
                     <div class="space-y-4">
                         <details class="group bg-brand-gray p-6 rounded-2xl cursor-pointer">
-                            <summary class="flex justify-between items-center font-bold text-xl list-none">
-                                Quels sont les horaires d'ouverture ?
-                                <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span>
-                            </summary>
-                            <div class="text-gray-600 mt-4 leading-relaxed">
-                                Pour les membres "Nomade" (3000F), l'accès est de 8h à 18h du lundi au samedi. Pour les membres "Espace Pro" et "Bureau Privé", l'accès est possible 24h/24 et 7j/7.
-                            </div>
+                            <summary class="flex justify-between items-center font-bold text-xl list-none">Quels sont les horaires d'ouverture ? <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span></summary>
+                            <div class="text-gray-600 mt-4 leading-relaxed">Pour les membres "Nomade" (3000F), l'accès est de 07h30 à 22h00 du lundi au samedi. Pour les membres "Espace Pro" et "Bureau Privé", l'accès est possible 24h/24 et 7j/7.</div>
                         </details>
                         <details class="group bg-brand-gray p-6 rounded-2xl cursor-pointer">
-                            <summary class="flex justify-between items-center font-bold text-xl list-none">
-                                L'internet est-il vraiment rapide ?
-                                <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span>
-                            </summary>
-                            <div class="text-gray-600 mt-4 leading-relaxed">
-                                Oui. Nous disposons d'une ligne Fibre Optique dédiée professionnelle avec un débit garanti et un backup 4G.
-                            </div>
+                            <summary class="flex justify-between items-center font-bold text-xl list-none">L'internet est-il vraiment rapide ? <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span></summary>
+                            <div class="text-gray-600 mt-4 leading-relaxed">Oui. Nous disposons d'une ligne Fibre Optique dédiée professionnelle avec un débit garanti et un backup 4G.</div>
                         </details>
                         <details class="group bg-brand-gray p-6 rounded-2xl cursor-pointer">
-                            <summary class="flex justify-between items-center font-bold text-xl list-none">
-                                Puis-je recevoir des clients ?
-                                <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span>
-                            </summary>
-                            <div class="text-gray-600 mt-4 leading-relaxed">
-                                Absolument. Vous pouvez recevoir vos visiteurs dans l'espace d'attente ou louer la salle de réunion pour plus de confidentialité.
-                            </div>
+                            <summary class="flex justify-between items-center font-bold text-xl list-none">Puis-je recevoir des clients ? <span class="transition group-open:rotate-180"><i class="ph-bold ph-caret-down"></i></span></summary>
+                            <div class="text-gray-600 mt-4 leading-relaxed">Absolument. Vous pouvez recevoir vos visiteurs dans l'espace d'attente ou louer la salle de réunion pour plus de confidentialité.</div>
                         </details>
                     </div>
                 </div>
             </section>
 
-            <!-- 8. CONTACT & ACCÈS -->
+            <!-- 8. CONTACT -->
             <section id="contact" class="py-24 bg-brand-black text-white relative overflow-hidden">
                 <div class="container mx-auto px-6 relative z-10">
                     <div class="text-center max-w-4xl mx-auto mb-16">
                         <h2 class="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight">CONTACTEZ <span class="text-brand-blue">NOUS</span>.</h2>
                         <p class="text-xl text-gray-400">Une question ? Envie de visiter ? Nous sommes là pour vous.</p>
                     </div>
-
                     <div class="grid md:grid-cols-2 gap-12 items-start">
-                        <!-- Info Box -->
                         <div class="bg-white text-black p-10 rounded-3xl shadow-xl">
                             <h3 class="text-2xl font-bold mb-8">Nos Coordonnées</h3>
                             <div class="space-y-6">
                                 <div class="flex items-start gap-4">
                                     <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-brand-blue text-xl shrink-0"><i class="ph-fill ph-map-pin"></i></div>
-                                    <div>
-                                        <h4 class="font-bold text-lg">Adresse</h4>
-                                        <p class="text-gray-600">Projet ZACA, Centre Ville<br>Ouagadougou, Burkina Faso</p>
-                                    </div>
+                                    <div><h4 class="font-bold text-lg">Adresse</h4><p class="text-gray-600">Projet ZACA, Centre Ville<br>Ouagadougou, Burkina Faso</p></div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-brand-blue text-xl shrink-0"><i class="ph-fill ph-clock"></i></div>
+                                    <div><h4 class="font-bold text-lg">Horaires d'ouverture</h4><p class="text-gray-600">Lundi - Samedi : 07h30 - 22h00</p></div>
                                 </div>
                                 <div class="flex items-start gap-4">
                                     <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-brand-blue text-xl shrink-0"><i class="ph-fill ph-phone"></i></div>
-                                    <div>
-                                        <h4 class="font-bold text-lg">Téléphone</h4>
-                                        <!-- Nouveau Numéro -->
-                                        <p class="text-gray-600">+226 54 33 75 26</p>
-                                        <p class="text-sm text-gray-400">Lun-Sam : 08h - 18h</p>
-                                    </div>
+                                    <div><h4 class="font-bold text-lg">Téléphone</h4><p class="text-gray-600">+226 54 33 75 26</p></div>
                                 </div>
                                 <button onclick="contactWhatsApp('Bonjour, je souhaite venir visiter')" class="mt-4 w-full py-4 rounded-xl bg-brand-blue text-white font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">
                                     <i class="ph-fill ph-whatsapp-logo text-xl"></i> Écrire sur WhatsApp
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Map Link (Photo personnalisée) -->
                         <a href="https://maps.app.goo.gl/FgTdA7AX1q82KtzWA?g_st=ic" target="_blank" class="block bg-gray-800 rounded-3xl h-[400px] relative overflow-hidden group cursor-pointer border border-white/10 hover:border-brand-blue/50 transition duration-300">
-                            <!-- Image MAPS.JPEG locale -->
                             <img src="maps.jpeg" onerror="this.src='https://images.unsplash.com/photo-1577083552792-a0d461cb1dd6?q=80&w=1000&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                             <div class="absolute inset-0 flex items-center justify-center">
                                 <div class="bg-white text-black px-6 py-3 rounded-full shadow-xl font-bold flex items-center gap-2 group-hover:scale-110 transition duration-300">
@@ -465,12 +410,11 @@
             </section>
         </div>
 
-        <!-- ================= DÉTAILS MASQUÉS (ACCESSIBLES VIA BOUTONS) ================= -->
-        
+        <!-- ================= DÉTAILS ESPACES ================= -->
+
         <!-- DETAIL OPEN SPACE -->
         <div id="detail-openspace" class="hidden page-transition min-h-screen bg-white pb-20">
             <div class="h-[50vh] relative">
-                <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance ici) -->
                 <img src="espace open space.jpeg" onerror="this.src='https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/40"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
@@ -480,43 +424,30 @@
                     </div>
                 </div>
             </div>
-            
             <div class="container mx-auto px-6 py-12">
-                <!-- Intro -->
                 <div class="max-w-3xl mx-auto text-center mb-16">
                     <h2 class="text-3xl font-bold mb-6">Boostez votre productivité</h2>
-                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
-                        Découvrez nos tarifs attractifs pour un espace de travail collaboratif et café à CoWork. Seul ou en groupe, boostez votre productivité avec nos offres flexibles et notre connexion haut débit. Profitez des offres spéciales pour les étudiants CoWorkers.
-                    </p>
-                    <div class="inline-block bg-brand-blue/10 text-brand-blue px-6 py-3 rounded-full font-bold text-sm border border-brand-blue/20">
-                        🎓 Une réduction exclusive est prévue pour les étudiants.
-                    </div>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">Découvrez nos tarifs attractifs pour un espace de travail collaboratif et café à CoWork. Seul ou en groupe, boostez votre productivité avec nos offres flexibles et notre connexion haut débit.</p>
+                    <div class="inline-block bg-brand-blue/10 text-brand-blue px-6 py-3 rounded-full font-bold text-sm border border-brand-blue/20">🎓 Une réduction exclusive est prévue pour les étudiants.</div>
                 </div>
-
-                <!-- Pricing Cards -->
                 <div class="grid md:grid-cols-3 gap-8 mb-20">
-                    <!-- Day Pass -->
                     <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
                         <h3 class="text-xl font-bold mb-2">Open Space Jour</h3>
                         <p class="text-gray-500 text-sm mb-6">Pour les besoins ponctuels.</p>
                         <div class="text-4xl font-extrabold mb-6">3 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès Espace Collaboratif & Café</li>
-                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès 24h</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès de 07h30 à 22h00</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Café ou Thé inclus</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Imprimante disponible</li>
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un Open Space Jour')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Weekly Pass -->
                     <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
                         <h3 class="text-xl font-bold mb-2">Hebdomadaire</h3>
                         <p class="text-gray-500 text-sm mb-6">Accès continu 7 jours.</p>
                         <div class="text-4xl font-extrabold mb-6">15 000 F <span class="text-base font-normal text-gray-400">/semaine</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Tous les avantages Jour</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès 7j/7</li>
@@ -525,14 +456,11 @@
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un Open Space Hebdo')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Monthly Pro -->
                     <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
                         <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
                         <h3 class="text-xl font-bold mb-2">CoWorker Pro</h3>
                         <p class="text-gray-500 text-sm mb-6">L'expérience illimitée & Premium.</p>
                         <div class="text-4xl font-extrabold mb-6">55 000 F <span class="text-base font-normal text-gray-400">/mois</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Espaces, Open Space & Café</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès Salle de Réunion</li>
@@ -544,11 +472,8 @@
                         <button onclick="contactWhatsApp('Je réserve un abonnement CoWorker Pro')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
                     </div>
                 </div>
-
-                <!-- Affiche Image at Bottom -->
                 <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
                     <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
-                    <!-- IMAGE : AFFICHE OPEN SPACE (Mise en bas comme demandé) -->
                     <img src="affiche open space.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Open Space">
                 </div>
             </div>
@@ -557,7 +482,6 @@
         <!-- DETAIL ESPACE PRO -->
         <div id="detail-espacepro" class="hidden page-transition min-h-screen bg-white pb-20">
             <div class="h-[50vh] relative">
-                 <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance pour éviter le doublon) -->
                 <img src="bureau professionnel 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/40"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
@@ -567,24 +491,16 @@
                     </div>
                 </div>
             </div>
-            
             <div class="container mx-auto px-6 py-12">
-                <!-- Intro -->
                 <div class="max-w-3xl mx-auto text-center mb-16">
                     <h2 class="text-3xl font-bold mb-6">Bureaux privés dans un espace professionnel</h2>
-                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
-                        Optez pour des bureaux privés dans un cadre professionnel moderne, au cœur de Ouagadougou, pour booster votre productivité.
-                    </p>
+                    <p class="text-gray-600 text-lg leading-relaxed">Optez pour des bureaux privés dans un cadre professionnel moderne, au cœur de Ouagadougou, pour booster votre productivité.</p>
                 </div>
-
-                <!-- Pricing Cards -->
                 <div class="grid md:grid-cols-3 gap-8 mb-20">
-                    <!-- Pro Worker (Jour) -->
                     <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
                         <h3 class="text-xl font-bold mb-2">Pro Worker</h3>
                         <p class="text-gray-500 text-sm mb-6">Pour débuter avec l'essentiel.</p>
                         <div class="text-4xl font-extrabold mb-6">5 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès bureau privé & rangement</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès 24h</li>
@@ -594,14 +510,11 @@
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un bureau Pro Worker Jour')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Pro Worker Avancé (Mois) -->
                     <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
                         <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
                         <h3 class="text-xl font-bold mb-2">Pro Worker Avancé</h3>
                         <p class="text-gray-500 text-sm mb-6">L'expérience optimale & complète.</p>
                         <div class="text-4xl font-extrabold mb-6">75 000 F <span class="text-base font-normal text-gray-400">/mois</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès bureau privé & rangement</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès 24/7 & Wi-Fi Haut Débit</li>
@@ -613,13 +526,10 @@
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un abonnement Pro Worker Avancé')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Equipe Startup (Sur Mesure) -->
                     <div class="border border-black bg-black text-white rounded-3xl p-8 hover:shadow-xl transition flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-white">Equipe Startup</h3>
                         <p class="text-gray-400 text-sm mb-6">Espace aménagé spécialement pour vous.</p>
                         <div class="text-4xl font-extrabold mb-6">Sur Mesure <span class="text-base font-normal text-gray-400">/mois</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow text-gray-300">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Avantages Pro Worker Avancé inclus</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Espace collaboratif sur mesure</li>
@@ -631,11 +541,8 @@
                         <button onclick="contactWhatsApp('Je souhaite un devis pour Equipe Startup')" class="w-full py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-bold">Demander un Devis</button>
                     </div>
                 </div>
-
-                <!-- Affiche Image at Bottom -->
                 <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
                     <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
-                    <!-- IMAGE : AFFICHE BUREAU PROFESSIONNEL (Mise en bas) -->
                     <img src="affiche bureau professionnel.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Espace Pro">
                 </div>
             </div>
@@ -644,7 +551,6 @@
         <!-- DETAIL BUREAU PRIVE -->
         <div id="detail-private" class="hidden page-transition min-h-screen bg-white pb-20">
             <div class="h-[50vh] relative">
-                 <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance pour éviter le doublon) -->
                 <img src="bureau prive.jpeg" onerror="this.src='https://images.unsplash.com/photo-1504384308090-c54be3852f33?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/40"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
@@ -654,24 +560,16 @@
                     </div>
                 </div>
             </div>
-            
             <div class="container mx-auto px-6 py-12">
-                <!-- Intro -->
                 <div class="max-w-3xl mx-auto text-center mb-16">
                     <h2 class="text-3xl font-bold mb-6">Bureau Privatif Individuel</h2>
-                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
-                        Transformez vos idées en réalité à Ouagadougou avec nos bureaux privatifs, mêlant innovation et tranquillité professionnelles.
-                    </p>
+                    <p class="text-gray-600 text-lg leading-relaxed">Transformez vos idées en réalité à Ouagadougou avec nos bureaux privatifs, mêlant innovation et tranquillité professionnelles.</p>
                 </div>
-
-                <!-- Pricing Cards -->
                 <div class="grid md:grid-cols-3 gap-8 mb-20">
-                    <!-- Business Man (Jour) -->
                     <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
                         <h3 class="text-xl font-bold mb-2">Business Man</h3>
                         <p class="text-gray-500 text-sm mb-6">Bureau privé et personnalisable pour une journée.</p>
                         <div class="text-4xl font-extrabold mb-6">10 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Bureau privé personnalisé + visiteurs</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Ambiance calme & Confidentialité</li>
@@ -682,14 +580,11 @@
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un bureau Business Man Jour')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Entrepreneur Pro (Mois) -->
                     <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
                         <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
                         <h3 class="text-xl font-bold mb-2">Entrepreneur Pro</h3>
                         <p class="text-gray-500 text-sm mb-6">Solution complète pour entrepreneurs.</p>
                         <div class="text-4xl font-extrabold mb-6">150 000 F <span class="text-base font-normal text-gray-400">/mois</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Bureau privé personnalisé + visiteurs</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Accès 24/7 & Wi-Fi Haut Débit</li>
@@ -701,13 +596,10 @@
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un abonnement Entrepreneur Pro')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Pack PME (Sur Mesure) -->
                     <div class="border border-black bg-black text-white rounded-3xl p-8 hover:shadow-xl transition flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-white">Pack PME</h3>
                         <p class="text-gray-400 text-sm mb-6">Services exclusifs supplémentaires pour équipe.</p>
                         <div class="text-4xl font-extrabold mb-6">A la demande <span class="text-base font-normal text-gray-400">/mois</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow text-gray-300">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Tous les avantages Entrepreneur Pro +</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Secrétariat dédié</li>
@@ -717,11 +609,8 @@
                         <button onclick="contactWhatsApp('Je souhaite un devis pour Pack PME')" class="w-full py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-bold">Demander un Devis</button>
                     </div>
                 </div>
-
-                <!-- Affiche Image at Bottom -->
                 <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
                     <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
-                    <!-- IMAGE : AFFICHE BUREAU PRIVE (Mise en bas) -->
                     <img src="affiche bureau prive.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Bureau Privé">
                 </div>
             </div>
@@ -730,7 +619,6 @@
         <!-- DETAIL MEETING -->
         <div id="detail-meeting" class="hidden page-transition min-h-screen bg-white pb-20">
             <div class="h-[50vh] relative">
-                <!-- IMAGE : Bannière (Utilisation de l'image d'ambiance pour éviter le doublon) -->
                 <img src="salle de reunion 1.jpeg" onerror="this.src='https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/30"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
@@ -740,56 +628,41 @@
                     </div>
                 </div>
             </div>
-            
             <div class="container mx-auto px-6 py-12">
-                <!-- Intro -->
                 <div class="max-w-3xl mx-auto text-center mb-16">
                     <h2 class="text-3xl font-bold mb-6">Salle de Réunion / Salle de Formation</h2>
-                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
-                        CoWork met à votre disposition une salle de réunion et une salle de formation hautement équipée à la pointe de la technologie.
-                    </p>
+                    <p class="text-gray-600 text-lg leading-relaxed">CoWork met à votre disposition une salle de réunion et une salle de formation hautement équipée à la pointe de la technologie.</p>
                 </div>
-
-                <!-- Pricing Cards -->
                 <div class="grid md:grid-cols-3 gap-8 mb-20">
-                    <!-- Pass Meeting (Heure) -->
                     <div class="border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition flex flex-col bg-white">
                         <h3 class="text-xl font-bold mb-2">Pass Meeting</h3>
                         <p class="text-gray-500 text-sm mb-6">Pour une rencontre ponctuelle.</p>
                         <div class="text-4xl font-extrabold mb-6">5 000 F <span class="text-base font-normal text-gray-400">/heure</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
-                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès Salle de réunion (Forfait adaptable)</li>
+                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Accès Salle de réunion</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-check-circle text-brand-blue text-lg shrink-0"></i> Salle équipée et meublée</li>
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un Pass Meeting')" class="w-full py-3 rounded-xl border border-black hover:bg-black hover:text-white transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Pass Workshop (Jour) -->
                     <div class="border-2 border-brand-orange rounded-3xl p-8 hover:shadow-2xl transition flex flex-col bg-white relative transform md:-translate-y-4 shadow-lg">
                         <div class="absolute top-0 right-0 bg-brand-orange text-white px-4 py-1 text-xs font-bold uppercase rounded-bl-xl rounded-tr-2xl">Populaire</div>
                         <h3 class="text-xl font-bold mb-2">Pass Workshop</h3>
                         <p class="text-gray-500 text-sm mb-6">Privatisation pour ateliers ou formations.</p>
                         <div class="text-4xl font-extrabold mb-6">25 000 F <span class="text-base font-normal text-gray-400">/jour</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Privatisation Salle de réunion</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Wi-Fi Haut Débit Gratuit</li>
-                            <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Salle équipée et meublée</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Service Imprimante</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Boissons chaudes offertes</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-star text-brand-orange text-lg shrink-0"></i> Casier Personnel</li>
                         </ul>
                         <button onclick="contactWhatsApp('Je réserve un Pass Workshop')" class="w-full py-3 rounded-xl bg-brand-orange text-white hover:bg-orange-700 transition font-bold">Réserver</button>
                     </div>
-
-                    <!-- Pass Training (Sur Mesure) -->
                     <div class="border border-black bg-black text-white rounded-3xl p-8 hover:shadow-xl transition flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-white">Pass Training</h3>
                         <p class="text-gray-400 text-sm mb-6">Formation de plusieurs jours (2+ jours).</p>
                         <div class="text-4xl font-extrabold mb-6">A la demande <span class="text-base font-normal text-gray-400">/projet</span></div>
-                        
                         <ul class="space-y-4 mb-8 flex-grow text-gray-300">
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accès Salle de formation équipée</li>
                             <li class="flex items-start gap-3 text-sm"><i class="ph-fill ph-crown text-brand-orange text-lg shrink-0"></i> Accompagnement projet formation</li>
@@ -800,12 +673,405 @@
                         <button onclick="contactWhatsApp('Je souhaite un devis pour Pass Training')" class="w-full py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-bold">Demander un Devis</button>
                     </div>
                 </div>
-
-                <!-- Affiche Image at Bottom -->
                 <div class="max-w-4xl mx-auto mt-12 bg-gray-50 p-4 rounded-3xl border border-gray-100">
                     <h3 class="text-2xl font-bold mb-6 text-center">L'Affiche Officielle</h3>
-                    <!-- IMAGE : AFFICHE SALLE REUNION (Mise en bas) -->
                     <img src="affiche salle de reunion.jpeg" class="w-full rounded-2xl shadow-xl hover:scale-[1.01] transition duration-500" alt="Affiche Salle de Réunion">
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGES ARTICLES ================= -->
+
+        <!-- ARTICLE 1 : Syndrome de l'imposteur -->
+        <div id="article-imposteur" class="hidden page-transition min-h-screen bg-white pb-20">
+            <!-- Hero article -->
+            <div class="h-[60vh] relative">
+                <img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?q=80&w=2070" alt="Professionnelle africaine confiante" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto max-w-4xl">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-blue transition bg-white/10 backdrop-blur px-4 py-2 rounded-full"><i class="ph-bold ph-arrow-left"></i> Retour au blog</button>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-brand-blue text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Développement Personnel</span>
+                            <span class="text-white/60 text-sm">8 min de lecture</span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Vaincre le Syndrome de l'Imposteur au Travail : Guide Complet</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenu article -->
+            <div class="container mx-auto px-6 py-16 max-w-4xl">
+                <div class="flex items-center gap-4 mb-12 pb-8 border-b border-gray-100">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-full flex items-center justify-center text-brand-blue text-xl font-bold">C</div>
+                    <div>
+                        <div class="font-bold">Équipe CoWork</div>
+                        <div class="text-sm text-gray-500">Publié le 15 Janvier 2026</div>
+                    </div>
+                </div>
+
+                <div class="article-body">
+
+                    <p>Vous venez d'obtenir une promotion, de décrocher un contrat important ou d'intégrer une nouvelle équipe dynamique. Et pourtant, au lieu de savourer ce succès, une petite voix intérieure murmure : <em>"Ce n'est qu'une question de temps avant qu'ils réalisent que tu n'es pas à ta place."</em> Si cette situation vous est familière, vous souffrez probablement du syndrome de l'imposteur — un phénomène psychologique beaucoup plus répandu qu'on ne le pense.</p>
+
+                    <blockquote>
+                        "Le syndrome de l'imposteur ne concerne pas les moins compétents. Il touche souvent les plus brillants, car ils sont assez intelligents pour réaliser la complexité de ce qu'ils ne savent pas encore."
+                    </blockquote>
+
+                    <h2>Qu'est-ce que le syndrome de l'imposteur ?</h2>
+
+                    <p>Le terme a été introduit pour la première fois en 1978 par deux psychologues américaines, Pauline Clance et Suzanne Imes. Il désigne un schéma psychologique dans lequel une personne doute chroniquement de ses accomplissements et a une peur persistante d'être exposée comme une "fraude", malgré des preuves évidentes de ses compétences.</p>
+
+                    <p>Des études estiment que près de 70% des personnes vivent cet état au moins une fois dans leur vie professionnelle. Il ne s'agit pas d'un trouble mental, mais d'une distorsion cognitive qui peut freiner considérablement votre épanouissement professionnel si elle n'est pas adressée.</p>
+
+                    <h2>Les 5 visages du syndrome de l'imposteur</h2>
+
+                    <p>La chercheuse Dr. Valerie Young a identifié cinq profils-types qui illustrent la diversité des façons dont le syndrome se manifeste :</p>
+
+                    <h3>1. Le Perfectionniste</h3>
+                    <p>Il fixe des objectifs extrêmement élevés et ressent une honte intense lorsqu'il n'atteint pas 100% de son but. Même une performance à 95% est vécue comme un échec. Ce profil souffre de procrastination ou au contraire de surmenage constant pour maintenir une image irréprochable.</p>
+
+                    <h3>2. L'Expert</h3>
+                    <p>Il pense qu'il doit tout savoir avant de se lancer. Il accumule les formations, les certifications, les diplômes, car il croit sincèrement ne jamais en savoir assez. Il hésite à se positionner comme "expert" dans son domaine malgré des années d'expérience.</p>
+
+                    <h3>3. Le Génie Naturel</h3>
+                    <p>Il s'est longtemps appuyé sur son talent inné. Dès qu'une tâche lui demande des efforts ou plusieurs tentatives, il interprète cela comme un signe de son incompétence. La lutte est perçue comme une preuve d'inaptitude, et non comme un processus d'apprentissage normal.</p>
+
+                    <h3>4. Le Solitaire</h3>
+                    <p>Il pense que demander de l'aide est un aveu de faiblesse. Il préfère tout gérer seul, même au prix d'une grande fatigue, pour ne pas montrer qu'il "ne sait pas". Accepter de l'assistance lui semble incompatible avec la compétence.</p>
+
+                    <h3>5. Le Super-héros</h3>
+                    <p>Il compense ses doutes internes en travaillant plus que tout le monde. Il se surinvestit dans tous les rôles — professionnel, familial, social — et mesure sa valeur à sa productivité. Il est souvent le premier arrivé et le dernier à partir du bureau.</p>
+
+                    <h2>Pourquoi sommes-nous touchés ?</h2>
+
+                    <p>Plusieurs facteurs contribuent au développement de ce syndrome :</p>
+
+                    <ul>
+                        <li><strong>L'éducation et l'environnement familial :</strong> grandir dans un milieu où les accomplissements étaient minimisés ou où la comparaison avec les autres était constante.</li>
+                        <li><strong>Être le premier de sa famille</strong> à accéder à un certain niveau d'études ou de carrière crée une pression supplémentaire : on n'a pas de modèle auquel se référer.</li>
+                        <li><strong>Appartenir à une minorité</strong> dans un secteur ou une organisation où l'on se sent différent accentue le sentiment de ne pas être "à sa place".</li>
+                        <li><strong>Les réseaux sociaux</strong> qui exposent uniquement les succès des autres, nourrissant une comparaison sociale biaisée et destructrice.</li>
+                        <li><strong>Les transitions professionnelles</strong> : un nouveau poste, une promotion, l'entrepreneuriat — tout changement de contexte peut le déclencher.</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <strong>💡 Le saviez-vous ?</strong> Des personnalités comme Maya Angelou, Albert Einstein ou Sheryl Sandberg ont publiquement confié avoir souffert du syndrome de l'imposteur. Cela prouve que la réussite objective ne protège pas de ce sentiment.
+                    </div>
+
+                    <h2>Les conséquences sur votre carrière</h2>
+
+                    <p>Non traité, le syndrome de l'imposteur peut avoir des effets dévastateurs sur votre trajectoire professionnelle :</p>
+
+                    <ul>
+                        <li>Vous refusez des opportunités par peur de "ne pas être à la hauteur".</li>
+                        <li>Vous sous-estimez systématiquement vos compétences lors des négociations salariales.</li>
+                        <li>Vous travaillez deux fois plus que nécessaire pour "prouver" votre valeur, menant à l'épuisement.</li>
+                        <li>Vous attribuez vos succès à la chance ou aux autres plutôt qu'à votre mérite.</li>
+                        <li>Vous développez une anxiété sociale qui freine vos prises de parole et votre visibilité.</li>
+                    </ul>
+
+                    <h2>5 stratégies concrètes pour s'en libérer</h2>
+
+                    <h3>Stratégie 1 : Nommez la bête</h3>
+                    <p>La première étape est de reconnaître que ce que vous ressentez a un nom : le syndrome de l'imposteur. Ce simple acte de nomination désamorce une grande partie de son pouvoir. Tenir un journal de bord dans lequel vous notez ces pensées est un premier pas puissant : vous réalisez rapidement qu'elles sont répétitives, irrationnelles et déconnectées de vos résultats réels.</p>
+
+                    <h3>Stratégie 2 : Créez un "dossier de preuves"</h3>
+                    <p>Constituez une collection de vos accomplissements concrets : e-mails de félicitations, notes de satisfaction de clients, résultats chiffrés de projets, retours positifs de collègues. Lors des épisodes de doute, consultez ce dossier. Les faits sont plus convaincants que les émotions.</p>
+
+                    <h3>Stratégie 3 : Parlez-en à votre entourage de confiance</h3>
+                    <p>Briser le silence est libérateur. Partagez ce que vous ressentez avec un mentor, un ami ou un collègue de confiance. La quasi-totalité de vos interlocuteurs vous répondra qu'ils ont vécu la même chose. Cette normalisation collective désamorce la honte et l'isolement.</p>
+
+                    <h3>Stratégie 4 : Recadrez votre relation à l'apprentissage</h3>
+                    <p>Adoptez un état d'esprit de croissance (growth mindset). Ne pas savoir quelque chose n'est pas un signe d'incompétence — c'est le point de départ de toute acquisition de compétence. Remplacez "Je ne sais pas, donc je suis une fraude" par "Je ne sais pas encore, et c'est une opportunité d'apprendre". La lutte est un signe d'ambition, pas de faiblesse.</p>
+
+                    <h3>Stratégie 5 : Cherchez une aide professionnelle</h3>
+                    <p>Lorsque le syndrome est sévère et impacte significativement votre qualité de vie, un accompagnement par un coach professionnel ou un thérapeute peut être transformateur. Des approches comme la Thérapie Cognitivo-Comportementale (TCC) sont particulièrement efficaces pour restructurer les schémas de pensée négatifs.</p>
+
+                    <h2>Et si votre imposteur avait du bon ?</h2>
+
+                    <p>Chose étonnante : un léger niveau de doute peut être sain. Il vous pousse à vous préparer davantage, à rester humble, à continuer d'apprendre. Le problème survient lorsque ce doute devient envahissant et paralysant. L'objectif n'est pas de le faire disparaître entièrement, mais d'apprendre à le gérer pour qu'il reste dans les limites de ce qui vous est utile.</p>
+
+                    <blockquote>
+                        "La confiance ne précède pas l'action — elle en est le résultat. Agissez malgré la peur, et la confiance suivra."
+                    </blockquote>
+
+                    <h2>Conclusion : Votre place est légitime</h2>
+
+                    <p>Si vous lisez cet article, c'est que vous êtes quelqu'un qui s'interroge sur lui-même, qui cherche à progresser, qui prend sa croissance au sérieux. Ce ne sont pas les traits d'un imposteur — ce sont les traits d'un professionnel consciencieux et ambitieux.</p>
+
+                    <p>Votre place au sommet de votre carrière n'est pas un accident ni une erreur. C'est le fruit de votre travail, de votre intelligence et de votre persévérance. Il est temps de vous l'approprier pleinement.</p>
+
+                    <div class="tip-box">
+                        <strong>🚀 Rejoignez la communauté CoWork</strong> — Lors de nos ateliers mensuels et petits-déjeuners entrepreneurs, nous créons un espace bienveillant pour aborder ces sujets et s'entraider. Venez partager vos défis et vous enrichir de l'expérience des autres.
+                    </div>
+                </div>
+
+                <!-- CTA retour -->
+                <div class="mt-16 pt-10 border-t border-gray-100 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                    <button onclick="showMainPage()" class="flex items-center gap-2 font-bold text-gray-500 hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour au blog</button>
+                    <button onclick="contactWhatsApp('J\'ai lu votre article sur le syndrome de l\'imposteur et j\'aimerais en savoir plus sur vos ateliers')" class="btn-primary px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                        Rejoindre la communauté <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARTICLE 2 : Méthode Pomodoro -->
+        <div id="article-pomodoro" class="hidden page-transition min-h-screen bg-white pb-20">
+            <div class="h-[60vh] relative">
+                <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=2070" alt="Homme concentré au travail" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto max-w-4xl">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-orange transition bg-white/10 backdrop-blur px-4 py-2 rounded-full"><i class="ph-bold ph-arrow-left"></i> Retour au blog</button>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-brand-orange text-white px-3 py-1 rounded-full text-xs font-bold uppercase">Tuto Productivité</span>
+                            <span class="text-white/60 text-sm">10 min de lecture</span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Maîtriser la Méthode Pomodoro : Le Guide Définitif pour Rester Focus</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-6 py-16 max-w-4xl">
+                <div class="flex items-center gap-4 mb-12 pb-8 border-b border-gray-100">
+                    <div class="w-12 h-12 bg-brand-orange/10 rounded-full flex items-center justify-center text-brand-orange text-xl font-bold">C</div>
+                    <div>
+                        <div class="font-bold">Équipe CoWork</div>
+                        <div class="text-sm text-gray-500">Publié le 20 Janvier 2026</div>
+                    </div>
+                </div>
+
+                <div class="article-body">
+
+                    <p>Dans un monde saturé de notifications, de réunions impromptues et d'interruptions constantes, rester concentré sur une tâche pendant plus de 20 minutes est devenu un véritable défi. Une étude de l'Université de Californie révèle qu'après une interruption, il faut en moyenne 23 minutes pour retrouver un état de concentration optimale. La méthode Pomodoro est l'une des techniques les plus efficaces — et les plus simples — pour reprendre le contrôle de votre attention.</p>
+
+                    <blockquote>
+                        "Ce n'est pas le manque de temps qui est le problème, c'est le manque de direction." — La méthode Pomodoro vous donne les deux.
+                    </blockquote>
+
+                    <h2>L'histoire derrière la tomate</h2>
+
+                    <p>La méthode Pomodoro a été développée à la fin des années 1980 par Francesco Cirillo, alors étudiant à l'université. Confronté à des difficultés de concentration, il a utilisé un minuteur de cuisine en forme de tomate (pomodoro en italien) pour chronométrer des sessions de travail de 25 minutes. Ce simple outil l'a aidé à transformer radicalement sa relation au travail et au temps. Il a ensuite formalisé cette technique et publié un livre entier sur le sujet.</p>
+
+                    <h2>Comment fonctionne la méthode : les 6 étapes</h2>
+
+                    <h3>Étape 1 : Définissez votre tâche</h3>
+                    <p>Avant de démarrer votre minuteur, identifiez précisément ce que vous allez accomplir pendant la session. Une tâche vague comme "travailler sur le projet" est beaucoup moins efficace qu'une tâche spécifique comme "rédiger les 3 premiers paragraphes de la proposition commerciale". La spécificité est la clé.</p>
+
+                    <h3>Étape 2 : Réglez votre minuteur sur 25 minutes</h3>
+                    <p>Ce laps de temps de 25 minutes est appelé un "Pomodoro". Pendant cette période, votre engagement est total : aucun e-mail, aucun réseau social, aucune conversation. Un seul Pomodoro = une seule tâche = concentration maximale. Vous pouvez utiliser une application comme Forest, Be Focused, ou simplement votre téléphone.</p>
+
+                    <h3>Étape 3 : Travaillez jusqu'au signal</h3>
+                    <p>Lorsque le minuteur sonne, posez immédiatement votre stylo (ou votre clavier). Même si vous êtes dans votre élan, il est important de respecter cette limite. Cela entraîne votre cerveau à associer le signal sonore à une coupure méritée, ce qui renforce progressivement votre discipline.</p>
+
+                    <h3>Étape 4 : Cochez votre Pomodoro et prenez une courte pause</h3>
+                    <p>Cochez votre session sur une feuille ou dans votre application. Puis prenez une pause de 5 minutes. Utilisez ce temps pour vous lever, vous étirer, boire de l'eau, ou simplement laisser votre esprit vagabonder. N'utilisez pas ces 5 minutes pour scroller sur les réseaux — cela ne permettrait pas à votre cerveau de "souffler" réellement.</p>
+
+                    <h3>Étape 5 : Répétez le cycle</h3>
+                    <p>Relancez votre minuteur pour un nouveau Pomodoro. La régularité du cycle crée un rythme de travail puissant. Votre cerveau commence à anticiper les moments de concentration et les moments de repos, ce qui facilite l'entrée en état de flow.</p>
+
+                    <h3>Étape 6 : Longue pause après 4 Pomodoros</h3>
+                    <p>Après quatre sessions complètes, accordez-vous une pause longue de 15 à 30 minutes. C'est le moment de vous récompenser davantage : une vraie pause repas, une balade, une conversation agréable. Cette pause longue est cruciale pour consolider votre mémoire et recharger vos ressources cognitives.</p>
+
+                    <div class="tip-box">
+                        <strong>⏱️ Le cycle standard :</strong> 25 min de travail → 5 min de pause → 25 min de travail → 5 min de pause → 25 min de travail → 5 min de pause → 25 min de travail → 15-30 min de pause longue.
+                    </div>
+
+                    <h2>Pourquoi ça fonctionne : la science derrière la tomate</h2>
+
+                    <p>La méthode Pomodoro est efficace pour plusieurs raisons psychologiques et neuroscientifiques :</p>
+
+                    <ul>
+                        <li><strong>La loi de Parkinson :</strong> "Le travail s'étend pour remplir le temps disponible." En limitant le temps à 25 minutes, vous créez une légère pression qui stimule la concentration et réduit la procrastination.</li>
+                        <li><strong>Le batissage contre la fatigue :</strong> Notre cerveau ne peut maintenir une concentration soutenue indéfiniment. Les pauses régulières empêchent l'épuisement mental et maintiennent la qualité de votre travail.</li>
+                        <li><strong>L'effet Zeigarnik :</strong> Notre cerveau retient mieux les tâches inachevées. En découpant le travail en sessions, vous gardez les objectifs actifs dans votre mémoire de travail, ce qui facilite la reprise.</li>
+                        <li><strong>La gamification :</strong> Cocher chaque Pomodoro complété libère de la dopamine — le neurotransmetteur du plaisir et de la motivation. Cela transforme le travail en une sorte de jeu mesurable.</li>
+                    </ul>
+
+                    <h2>Adapter la méthode à votre contexte africain</h2>
+
+                    <p>La beauté de la méthode Pomodoro est sa flexibilité. Dans un contexte où les coupures d'électricité, les sollicitations sociales fréquentes ou les environnements de travail non optimisés peuvent perturber votre concentration, la méthode offre un cadre résilient :</p>
+
+                    <ul>
+                        <li><strong>Planifiez vos Pomodoros en début de journée :</strong> Estimez combien de sessions chaque tâche nécessite avant de commencer. Un email court = 1 Pomodoro, un rapport = 4 à 6 Pomodoros.</li>
+                        <li><strong>Utilisez le carnet papier en backup :</strong> En cas de coupure de réseau ou d'électricité, un simple carnet et une montre suffisent pour maintenir la méthode.</li>
+                        <li><strong>Adaptez la durée si nécessaire :</strong> Certaines personnes travaillent mieux avec des sessions de 45 ou 50 minutes. Expérimentez et trouvez votre rythme optimal.</li>
+                        <li><strong>Communiquez votre méthode :</strong> Informez vos collègues ou votre entourage que vous êtes "en Pomodoro" pour réduire les interruptions sociales. Un simple panneau "Concentration en cours" peut faire des merveilles.</li>
+                    </ul>
+
+                    <h2>Les erreurs courantes à éviter</h2>
+
+                    <p>Même si la technique est simple, certaines erreurs peuvent réduire son efficacité :</p>
+
+                    <ul>
+                        <li><strong>Sauter les pauses :</strong> "Je suis dans mon élan, je continue." C'est la principale erreur. Les pauses ne sont pas des pertes de temps — elles sont le carburant de la session suivante.</li>
+                        <li><strong>Mal définir la tâche :</strong> Une tâche trop vague vous laissera sans direction. Soyez spécifique et mesurable.</li>
+                        <li><strong>Répondre aux interruptions :</strong> Si quelqu'un vous sollicite pendant un Pomodoro, notez la demande et gérez-la lors de votre pause. Sauf urgence absolue, aucune interruption n'est acceptable.</li>
+                        <li><strong>Consulter les notifications :</strong> Activez le mode "Ne pas déranger" sur tous vos appareils avant de démarrer.</li>
+                    </ul>
+
+                    <h2>Les applications recommandées</h2>
+
+                    <ul>
+                        <li><strong>Forest (iOS & Android) :</strong> Chaque Pomodoro complété fait pousser un arbre virtuel. Si vous quittez l'application, votre arbre meurt. Gamification et responsabilisation au service de la concentration.</li>
+                        <li><strong>Toggl Track :</strong> Idéal pour les freelances et les travailleurs indépendants qui ont besoin de suivre leur temps par projet ou client.</li>
+                        <li><strong>Be Focused Pro :</strong> Simple, élégant, et entièrement dédié à la méthode Pomodoro, avec des statistiques détaillées.</li>
+                        <li><strong>La méthode papier-crayon :</strong> Ne sous-estimez pas la puissance d'un carnet et d'une montre. Zéro distraction digitale garantie.</li>
+                    </ul>
+
+                    <blockquote>
+                        "La discipline est choisir entre ce que vous voulez maintenant et ce que vous voulez le plus." La méthode Pomodoro rend ce choix concret, mesurable et progressif.
+                    </blockquote>
+
+                    <h2>Comment commencer dès aujourd'hui</h2>
+
+                    <p>Voici votre défi pour les 7 prochains jours : choisissez une seule tâche importante chaque matin et engagez-vous à y consacrer deux Pomodoros avant d'ouvrir vos e-mails ou réseaux sociaux. Deux sessions de 25 minutes = 50 minutes de travail profond sur ce qui compte vraiment. Après une semaine, mesurez les résultats. La plupart des gens sont stupéfaits de ce qu'ils peuvent accomplir en à peine 50 minutes de concentration pure.</p>
+
+                    <div class="tip-box">
+                        <strong>🍅 À CoWork, votre environnement fait la moitié du travail.</strong> Un espace calme, une connexion internet stable, une climatisation confortable — nos espaces sont conçus pour maximiser votre état de flow. Essayez la méthode Pomodoro chez nous pour en mesurer tout le potentiel.
+                    </div>
+                </div>
+
+                <div class="mt-16 pt-10 border-t border-gray-100 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                    <button onclick="showMainPage()" class="flex items-center gap-2 font-bold text-gray-500 hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour au blog</button>
+                    <button onclick="contactWhatsApp('J\'aimerais visiter l\'espace CoWork pour travailler en Pomodoro dans de bonnes conditions')" class="bg-brand-orange text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-orange-700 transition flex items-center gap-2">
+                        Tester dans notre espace <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARTICLE 3 : Networking -->
+        <div id="article-networking" class="hidden page-transition min-h-screen bg-white pb-20">
+            <div class="h-[60vh] relative">
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2070" alt="Événement networking professionnel" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                    <div class="container mx-auto max-w-4xl">
+                        <button onclick="showMainPage()" class="mb-6 flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-blue transition bg-white/10 backdrop-blur px-4 py-2 rounded-full"><i class="ph-bold ph-arrow-left"></i> Retour au blog</button>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-white text-black px-3 py-1 rounded-full text-xs font-bold uppercase">Carrière & Réseautage</span>
+                            <span class="text-white/60 text-sm">12 min de lecture</span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">L'Art du Networking : Comment Créer des Relations Professionnelles Durables</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-6 py-16 max-w-4xl">
+                <div class="flex items-center gap-4 mb-12 pb-8 border-b border-gray-100">
+                    <div class="w-12 h-12 bg-brand-black/10 rounded-full flex items-center justify-center text-brand-black text-xl font-bold">C</div>
+                    <div>
+                        <div class="font-bold">Équipe CoWork</div>
+                        <div class="text-sm text-gray-500">Publié le 5 Février 2026</div>
+                    </div>
+                </div>
+
+                <div class="article-body">
+
+                    <p>On entend souvent dire : "Ce n'est pas ce que vous savez, c'est qui vous connaissez." Si cette formule est réductrice, elle contient une vérité importante : dans la vie professionnelle, les relations humaines sont un actif aussi précieux — parfois davantage — que vos compétences techniques. Le networking ne consiste pas à collectionner des cartes de visite ou à ajouter des inconnus sur LinkedIn. C'est l'art de construire un réseau de relations authentiques, mutuellement bénéfiques et durables.</p>
+
+                    <blockquote>
+                        "Votre réseau est votre valeur nette." — Porter Gale, ancienne VP Marketing de Virgin America.
+                    </blockquote>
+
+                    <h2>Pourquoi le networking est crucial pour votre carrière</h2>
+
+                    <p>Les chiffres parlent d'eux-mêmes : selon LinkedIn, 85% des emplois sont pourvus grâce au réseau professionnel. Ce phénomène est encore plus marqué dans les marchés émergents et les économies à forte dimension relationnelle comme ceux d'Afrique de l'Ouest, où la confiance interpersonnelle est souvent le premier filtre de sélection d'un partenaire ou d'un collaborateur.</p>
+
+                    <p>Au-delà de l'emploi, un réseau solide vous permet de :</p>
+                    <ul>
+                        <li>Accéder à des informations et opportunités avant qu'elles ne soient publiques.</li>
+                        <li>Trouver des mentors et des accélérateurs de carrière.</li>
+                        <li>Obtenir des recommandations crédibles auprès de clients ou partenaires.</li>
+                        <li>Co-créer des projets avec des personnes complémentaires.</li>
+                        <li>Bénéficier d'un soutien moral dans les moments difficiles de votre parcours.</li>
+                    </ul>
+
+                    <h2>Les 3 erreurs fatales du networking</h2>
+
+                    <h3>Erreur 1 : Networker uniquement quand on a besoin</h3>
+                    <p>C'est l'erreur la plus commune. Vous ne pensez à votre réseau que lorsque vous cherchez un emploi, un client ou un financement. Mais à ce moment-là, il est trop tard pour construire une relation. Les gens sentent quand on les approche uniquement par intérêt. Le networking doit être une pratique régulière et désintéressée, pas une stratégie de crise.</p>
+
+                    <h3>Erreur 2 : Se concentrer sur la quantité</h3>
+                    <p>500 connexions LinkedIn sans interaction réelle ne valent pas 10 relations profondes et actives. La force d'un réseau se mesure à la qualité des échanges et à la confiance mutuelle, pas au nombre de contacts. Préférez approfondir quelques relations clés plutôt que de collectionner des contacts superficiels.</p>
+
+                    <h3>Erreur 3 : Parler de soi en premier</h3>
+                    <p>Beaucoup de gens abordent le networking comme un pitch de vente : "Voici qui je suis, voici ce que je fais, voici ce dont j'ai besoin." C'est la meilleure façon de rebuter vos interlocuteurs. La règle d'or du networking est d'écouter d'abord, de comprendre les besoins de l'autre, et d'offrir de la valeur avant d'en demander.</p>
+
+                    <h2>La méthode GIVE pour un networking authentique</h2>
+
+                    <p>Voici un cadre pratique pour aborder vos interactions réseau de façon authentique et efficace :</p>
+
+                    <h3>G — Générosité</h3>
+                    <p>Commencez toujours par donner. Partagez une information utile, présentez deux personnes qui pourraient se compléter, recommandez un article pertinent, offrez un retour sur le projet de quelqu'un. La générosité crée une dynamique de réciprocité naturelle — sans jamais l'exiger. Celui qui donne sans attendre est celui qu'on n'oublie pas.</p>
+
+                    <h3>I — Intelligence des profils</h3>
+                    <p>Avant tout événement ou rencontre, faites vos recherches. Apprenez à connaître vos interlocuteurs : leur parcours, leurs projets actuels, leurs centres d'intérêt, les défis de leur secteur. Rien ne valorise plus quelqu'un que de sentir que votre intérêt pour lui est sincère et documenté, pas générique.</p>
+
+                    <h3>V — Valeur ajoutée</h3>
+                    <p>Demandez-vous systématiquement : "Qu'est-ce que cette personne pourrait gagner à me connaître ?" Identifiez comment vos compétences, votre réseau, vos connaissances ou votre expérience peuvent être utiles à l'autre. Une relation de réseau ne dure que si les deux parties y trouvent de la valeur.</p>
+
+                    <h3>E — Entretien régulier</h3>
+                    <p>Le plus grand ennemi d'un réseau est l'oubli. Un contact que vous n'alimentez pas devient un étranger. Maintenez le lien régulièrement : un message de félicitations pour une promotion, un article que vous pensez pertinent pour eux, un café occasionnel, une invitation à un événement. Ces petits gestes coûtent peu et maintiennent la relation vivante.</p>
+
+                    <h2>Comment réussir dans un événement networking</h2>
+
+                    <h3>Avant l'événement</h3>
+                    <p>Consultez la liste des participants si elle est disponible. Identifiez 3 à 5 personnes que vous souhaitez absolument rencontrer. Préparez une accroche courte et mémorable sur vous — ce qu'on appelle le "pitch d'ascenseur" : en 30 secondes maximum, qui êtes-vous et quelle valeur créez-vous ? Fixez-vous un objectif clair : nouer deux nouvelles connexions de qualité vaut mieux que d'échanger avec vingt personnes de façon superficielle.</p>
+
+                    <h3>Pendant l'événement</h3>
+                    <p>Arrivez en avance. C'est le moment le plus propice aux échanges approfondis, avant que l'événement ne commence et que les groupes ne se forment. Lorsque vous rencontrez quelqu'un, posez des questions ouvertes et montrez un intérêt sincère. Écoutez activement — les personnes passionnantes sont d'abord des personnes qui font sentir à leurs interlocuteurs qu'ils sont intéressants. Avant de vous séparer, concluez sur une action concrète : "Je vous envoie ce rapport demain", "On se retrouve au prochain atelier ?"</p>
+
+                    <h3>Après l'événement</h3>
+                    <p>Le suivi est là où la plupart des gens échouent. Dans les 24 heures suivant un événement, envoyez un message personnalisé à chaque nouvelle connaissance qui compte. Rappeler un détail de votre conversation prouve que vous étiez présent et attentif. C'est ce petit effort supplémentaire qui transforme une rencontre en relation.</p>
+
+                    <div class="tip-box">
+                        <strong>✉️ Modèle de message de suivi :</strong> "Bonjour [Prénom], j'ai pris beaucoup de plaisir à échanger avec vous lors de [l'événement] hier. Votre vision de [sujet abordé] m'a vraiment interpellé. Je me permets de vous envoyer [article / ressource] dont nous parlions. Au plaisir d'échanger à nouveau !"
+                    </div>
+
+                    <h2>Construire son réseau en ligne</h2>
+
+                    <h3>LinkedIn : votre vitrine professionnelle</h3>
+                    <p>Votre profil LinkedIn est votre première impression digitale. Un profil incomplet ou négligé est une opportunité manquée. Assurez-vous d'avoir une photo professionnelle, une accroche claire et mémorable, et une section "À propos" qui raconte votre histoire et votre valeur de façon engageante. Publiez régulièrement du contenu qui reflète votre expertise : analyses de votre secteur, retours d'expérience, opinions documentées. La visibilité régulière vous maintient dans l'esprit de votre réseau.</p>
+
+                    <h3>WhatsApp : le réseau informel puissant</h3>
+                    <p>En Afrique de l'Ouest, WhatsApp est souvent le premier canal de communication professionnelle. Les groupes sectoriels, les cercles d'entrepreneurs ou les communautés thématiques sont des espaces de networking quotidien. Participez activement, partagez des informations utiles, et évitez le simple "forwarding" de contenu sans valeur ajoutée.</p>
+
+                    <h2>Le réseau par la réciprocité : donner avant de recevoir</h2>
+
+                    <p>Le principe fondamental du networking durable est la réciprocité. Mais elle doit être asymétrique au début : donnez plus que vous ne recevez. Faites des introductions généreuses entre membres de votre réseau, même si vous n'en tirez aucun bénéfice direct immédiat. Recommandez les services d'un confrère sans qu'il vous l'ait demandé. Partagez une opportunité même si vous n'en êtes pas le bénéficiaire.</p>
+
+                    <p>Cette générosité systématique construit quelque chose d'inestimable : une réputation de connecteur fiable et bienveillant. Les personnes avec cette réputation sont sollicitées, recommandées et associées naturellement — leur réseau devient un actif qui travaille pour eux même quand ils ne font rien.</p>
+
+                    <h2>Diversifier son réseau : sortez de votre bulle</h2>
+
+                    <p>Il est naturel et confortable de s'entourer de personnes qui nous ressemblent : même secteur, même formation, même milieu social. Mais un réseau homogène est un réseau appauvri. Les informations et opportunités les plus précieuses viennent souvent de "liens faibles" — des personnes issues de milieux différents des nôtres qui ont accès à des cercles et des informations auxquels nous n'aurions jamais accès autrement.</p>
+
+                    <p>Cherchez activement à rencontrer des personnes d'autres secteurs, d'autres générations, d'autres horizons géographiques. Un développeur qui connaît des agriculteurs innovants, un artiste qui fréquente des financiers, un entrepreneur qui entretient des liens avec des fonctionnaires — ces ponts entre mondes distincts sont une source de créativité et d'opportunités extraordinaires.</p>
+
+                    <blockquote>
+                        "Seul on va plus vite, ensemble on va plus loin." — Proverbe africain qui résume parfaitement l'essence du networking.
+                    </blockquote>
+
+                    <h2>Conclusion : commencez par un geste aujourd'hui</h2>
+
+                    <p>Le meilleur moment pour développer votre réseau était il y a cinq ans. Le deuxième meilleur moment, c'est aujourd'hui. Vous n'avez pas besoin d'un événement exceptionnel pour commencer : envoyez un message à quelqu'un que vous estimez et que vous n'avez pas contacté depuis trop longtemps. Proposez un café à un professionnel que vous admirez. Commentez de façon substantielle la publication d'un expert de votre domaine.</p>
+
+                    <p>Chaque grande carrière, chaque belle aventure entrepreneuriale, chaque transformation significative commence presque toujours par une rencontre. Votre prochain partenaire, client, mentor ou ami est peut-être à une conversation de distance.</p>
+
+                    <div class="tip-box">
+                        <strong>🤝 Chez CoWork, le networking est dans notre ADN.</strong> Nos petits-déjeuners hebdomadaires, nos ateliers mensuels et nos afterworks du vendredi sont précisément conçus pour créer ces connexions authentiques. Rejoignez notre communauté et transformez vos voisins de bureau en partenaires de demain.
+                    </div>
+                </div>
+
+                <div class="mt-16 pt-10 border-t border-gray-100 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                    <button onclick="showMainPage()" class="flex items-center gap-2 font-bold text-gray-500 hover:text-brand-blue transition"><i class="ph-bold ph-arrow-left"></i> Retour au blog</button>
+                    <button onclick="contactWhatsApp('J\'aimerais rejoindre les événements networking de CoWork')" class="btn-primary px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                        Rejoindre nos événements <i class="ph-bold ph-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -815,40 +1081,30 @@
     <!-- FOOTER -->
     <footer class="bg-white border-t border-gray-100 py-12 mt-auto">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="font-bold text-xl">
-                Co<span class="text-brand-orange">Work</span>.
-            </div>
-            <div class="text-gray-500 text-sm">
-                &copy; 2026 CoWork. Tous droits réservés.
-            </div>
-            <div class="flex gap-6">
-                <a href="#" class="text-gray-400 hover:text-black transition"><i class="ph-bold ph-instagram-logo text-xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-black transition"><i class="ph-bold ph-facebook-logo text-xl"></i></a>
+            <div class="font-bold text-xl"><span class="text-brand-orange">Co</span><span class="text-brand-blue">Work</span>.</div>
+            <div class="text-gray-500 text-sm text-center md:text-left">&copy; 2026 CoWork. Tous droits réservés.</div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Nos réseaux</span>
+                <a href="https://linktr.ee/yourcowork" target="_blank" class="bg-gray-100 p-3 rounded-full text-gray-600 hover:bg-brand-blue hover:text-white transition flex items-center justify-center group" title="Linktree">
+                    <i class="ph-bold ph-link text-xl group-hover:rotate-45 transition duration-300"></i>
+                </a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Fonction pour afficher la page principale
         function showMainPage() {
             document.getElementById('home-page').classList.remove('hidden');
-            // Cacher toutes les pages de détails
-            const details = document.querySelectorAll('[id^="detail-"]');
+            const details = document.querySelectorAll('[id^="detail-"], [id^="article-"]');
             details.forEach(d => d.classList.add('hidden'));
-            
-            // Re-afficher le footer normal
+            document.getElementById('reading-progress').style.width = '0%';
             document.querySelector('footer').classList.remove('hidden');
         }
 
-        // Fonction pour afficher les détails d'un espace (mode focus)
         function showDetail(detailId) {
             document.getElementById('home-page').classList.add('hidden');
-            
-            // Cacher toutes les pages de détails d'abord
-            const details = document.querySelectorAll('[id^="detail-"]');
+            const details = document.querySelectorAll('[id^="detail-"], [id^="article-"]');
             details.forEach(d => d.classList.add('hidden'));
-            
-            // Afficher le détail demandé
             const target = document.getElementById(detailId);
             if(target) {
                 target.classList.remove('hidden');
@@ -856,12 +1112,32 @@
             }
         }
 
+        function showArticle(articleId) {
+            document.getElementById('home-page').classList.add('hidden');
+            const all = document.querySelectorAll('[id^="detail-"], [id^="article-"]');
+            all.forEach(d => d.classList.add('hidden'));
+            const target = document.getElementById(articleId);
+            if(target) {
+                target.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+        }
+
         function contactWhatsApp(message) {
-            // NUMÉRO MIS À JOUR
-            const phoneNumber = "22654337526"; 
+            const phoneNumber = "22654337526";
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
+
+        // Barre de progression lecture
+        window.addEventListener('scroll', () => {
+            const el = document.querySelector('[id^="article-"]:not(.hidden)');
+            if (!el) { document.getElementById('reading-progress').style.width = '0%'; return; }
+            const scrollTop = window.scrollY;
+            const docHeight = el.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('reading-progress').style.width = Math.min(progress, 100) + '%';
+        });
     </script>
 </body>
 </html>
